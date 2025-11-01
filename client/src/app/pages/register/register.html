@@ -1,0 +1,56 @@
+<form class="signup-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2> Secure Remote Password Sign Up</h2>
+
+    <!-- live region for messages -->
+    <p class="alert" [class.error]="isError()" [class.success]="!isError()" aria-live="polite">
+        {{ message() }}
+    </p>
+
+    <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username" placeholder="Enter your username" />
+        <small *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+            Username is required.
+        </small>
+    </div>
+
+    <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter your email" />
+        <small *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+            Enter a valid email.
+        </small>
+    </div>
+
+    <!-- ✅ Nested Password Group -->
+    <div formGroupName="passwords" class="grid">
+        <div class="field">
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password" placeholder="Enter your password" />
+            <small
+                *ngIf="form.get('passwords.password')?.touched && form.get('passwords.password')?.errors?.['minlength']">
+                Minimum 6 characters.
+            </small>
+        </div>
+
+        <div class="field">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" formControlName="confirmPassword"
+                placeholder="Confirm your password" />
+            <small
+                *ngIf="form.get('passwords')?.touched && (form.get('passwords')?.value?.password !== form.get('passwords')?.value?.confirmPassword)">
+                Passwords do not match.
+            </small>
+        </div>
+    </div>
+
+    <button type="submit" class="btn">
+        <span *ngIf="!isLoading()">Create Account</span>
+        <span *ngIf="isLoading()" class="spinner" aria-hidden="true"></span>
+    </button>
+
+    <p class="login-link">
+        Already have an account?
+        <a routerLink="/login">Login here</a>
+    </p>
+</form>

@@ -1,0 +1,110 @@
+/* ===== Base Layout ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* ===== Logo ===== */
+.navbar__logo a {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: black;
+  text-decoration: none;
+}
+
+/* ===== Navigation Links ===== */
+.navbar__links ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  list-style: none;
+  text-decoration: none;
+}
+.navbar__links a {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar__links li.active-link a {
+  color: #007bff;
+  font-weight: 600;
+  text-decoration: none;
+  list-style: none;
+}
+
+/* ===== Auth Section (e.g. Login) ===== */
+.navbar__auth {
+  display: flex;
+  align-items: center;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .navbar__links ul {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.hidden {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.navbar-container {
+  position: relative;
+}
+
+.menu-toggle {
+  position: relative;
+  z-index: 1000;
+  left: 9.8rem;
+  border: none;
+  top: -1rem;
+  background-color: unset;
+}
+.menu-toggle span {
+  font-size: 1.5rem;
+}
+.menu-toggle.hidden {
+  position: unset;
+  z-index: 1000;
+  margin: 0rem auto;
+  padding-bottom: 1rem;
+}
+
+.navbar__links i {
+  font-size: 1.4rem;
+}
+
+.navbar.hidden {
+  display: flex;
+  align-items: center;
+  width: 30px;
+}
+
+.navbar.hidden .navbar__links i {
+  font-size: 1.8rem;
+}

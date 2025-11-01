@@ -1,0 +1,52 @@
+<div [ngClass]="navbarClass()">
+    <div class="navbar-container">
+
+        <header class="navbar" [class.hidden]="checkMenuOpen">
+            @if (showMenuIcon()) {
+            <button class="menu-toggle" [class.hidden]="checkMenuOpen" (click)="toggleMenu()">
+                <span *ngIf="checkMenuOpen">&#9776;</span>
+                <span *ngIf="!checkMenuOpen">&times;</span>
+            </button>
+            }
+
+            @if (!showLogo()) {
+            <div class="navbar__logo">
+                <a routerLink="/">
+                    <img [src]="logo()" alt="MyApp Logo" />
+                </a>
+                @if (showProfileName() && !checkMenuOpen) {
+                <p>John Kus</p>
+                }
+            </div>
+            }
+
+            <nav class="navbar__links">
+                <ul>
+                    @for (link of navLinks(); track link.path) {
+                    <li routerLinkActive="active-link">
+                        <a [routerLink]="link.path">
+                            @if (link.icon) {
+                            <i [class]="link.icon"></i>
+                            }
+                            @if (!checkMenuOpen) {
+                            {{ link.label }}
+                            }
+                        </a>
+                    </li>
+
+                    }
+                </ul>
+            </nav>
+
+            @if (!showLogin()) {
+            <div class="navbar__auth">
+                <ng-content></ng-content>
+            </div>
+            }
+        </header>
+    </div>
+
+    <div>
+        <router-outlet></router-outlet>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2>Secure Remote Password Login</h2>
+    <p *ngIf="message()" class="alert success">{{ message() }}</p>
+    <label>Email</label>
+    <input type="email" formControlName="email" placeholder="Enter your email" />
+
+    <label>Password</label>
+    <input type="password" formControlName="password" placeholder="Enter your password" />
+
+    <button type="submit" [disabled]="form.invalid || loading()">
+        <ng-container *ngIf="!loading(); else loadingTpl">Login</ng-container>
+    </button>
+
+    <ng-template #loadingTpl>
+        <span class="btn-spinner"></span>
+    </ng-template>
+</form>

@@ -3,16 +3,12 @@ import { Navbar } from '../components/navbar/navbar';
 import { Footer } from '../components/footer/footer';
 import { NavbarService } from '../components/navbar/navbar-service';
 import { NavLink } from '../components/navbar/navbar.model';
-import { Register } from '../pages/register/register';
-import { LoginLink } from '../components/login-link/login-link';
-import { RegisterLink } from '../components/register-link/register-link';
-import { RouterOutlet } from '@angular/router';
-import { throwError } from 'rxjs';
+import { LinkButton } from '../components/link-button/link-button';
 
 @Component({
   selector: 'app-with-navbar-layout',
   standalone: true,
-  imports: [Navbar, Footer, LoginLink, RegisterLink],
+  imports: [Navbar, LinkButton, Footer],
   templateUrl: './with-navbar-layout.html',
   styleUrl: './with-navbar-layout.css',
 })
@@ -23,13 +19,14 @@ export class WithNavbarLayout implements OnInit {
   showLogo = computed(() => this.navbarService.showLogo());
   logo = computed(() => this.navbarService.logoUrl());
   private defaultLinks: NavLink[] = [
-    { label: 'About', path: '/about', icon: '' },
+    { label: 'Home', path: '/', icon: '' },
     { label: 'Feature', path: '/feature', icon: '' },
+    { label: 'About', path: '/about', icon: '' },
   ];
 
   ngOnInit() {
     this.navbarService.setNavLinks(this.defaultLinks);
-    this.navbarService.setLogo('assets/favicon.ico');
+    this.navbarService.setLogo('assets/app_logo.png');
     this.navbarService.toggleLogin(false);
     this.navbarService.toggleLogo(false);
   }

@@ -1,0 +1,30 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="signup-form">
+    <h2>{{ title() }}</h2>
+    <p>{{ p() }}</p>
+
+    @for (item of formData(); track item.label) {
+    <label for="{{ item.formControlName }}">{{ item.label }}</label>
+    <input [type]="item.type" [formControlName]="item.formControlName" [placeholder]="item.placeholder" />
+
+    @if (form.get(item.formControlName)?.touched || form.get(item.formControlName)?.dirty) {
+    <div class="errors">
+        @for (msg of errorMessages(item.formControlName, item.label); track $index) {
+        <small>{{ msg }}</small>
+        }
+    </div>
+    }
+    }
+
+    <button type="submit">{{ buttonName() }}</button>
+    @if (title() === 'Welcome back') {
+    <p class="auth-note">
+        Don't have an account?
+        <a routerLink="/register">Sign up</a>.
+    </p>
+    } @else {
+    <p class="auth-note">
+        Already have an account?
+        <a routerLink="/login">Sign in</a>.
+    </p>
+    }
+</form>

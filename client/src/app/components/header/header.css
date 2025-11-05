@@ -1,0 +1,67 @@
+.header-page-container {
+  font-family: Arial, Helvetica, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2rem;
+}
+p {
+  max-width: 900px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: rgba(0, 0, 0, 0.63);
+}
+h1 {
+  max-width: 600px;
+  text-align: center;
+  font-size: 3.3rem;
+  color: rgba(0, 0, 0, 0.822);
+}
+label {
+  background: linear-gradient(
+    135deg,
+    hsl(262 83% 58%) 0%,
+    hsl(300 76% 60%) 50%,
+    hsl(340 82% 62%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 600;
+}
+.features-page-why-teams-love h1 {
+  font-size: 2.2rem;
+}
+.features-page-why-teams-love p {
+  font-size: 1.3rem;
+  position: relative;
+  bottom: 1.8rem;
+}
+
+.about-header p {
+  font-size: 1.3rem;
+  position: relative;
+  bottom: 1.8rem;
+  max-width: 650px;
+}
+.about-header h1 {
+  font-size: 2.2rem;
+}
+.about-header-story h1 {
+  font-size: 2.2rem;
+}
+.about-header-story p {
+  font-size: 1.3rem;
+  position: relative;
+  bottom: 1.8rem;
+  max-width: 1000px;
+}
+.about-page-header h1 {
+  font-size: 2.2rem;
+}
+.about-page-header p {
+  font-size: 1.3rem;
+  position: relative;
+  bottom: 1.8rem;
+  max-width: 650px;
+}

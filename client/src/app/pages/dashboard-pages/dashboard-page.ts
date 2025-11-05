@@ -2,11 +2,6 @@ import { Component, computed, effect, inject } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
 import { NavbarService } from '../../components/navbar/navbar-service';
 import { NavLink } from '../../components/navbar/navbar.model';
-import { LoginLink } from '../../components/login-link/login-link';
-import { RegisterLink } from '../../components/register-link/register-link';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { Settings } from './settings/settings';
-import { Management } from './management/management';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,8 +24,7 @@ export class Dashboard {
   ];
 
   constructor() {
-    effect(() => {
-    });
+    effect(() => {});
   }
   ngOnInit() {
     this.navbarService.setNavLinks(this.defaultLinks);

@@ -1,13 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SrpAuthService } from './srp-auth';
 import { NgIf } from '@angular/common';
+import { SrpAuthService } from './srp-auth';
+import { FormItems, ReactiveForm } from '../../components/reactive-form/reactive-form';
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf],
+  imports: [ReactiveForm],
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.css'],
 })
@@ -17,45 +18,45 @@ export class LoginPage {
 
   loading = signal(false);
   message = signal('');
-  isError = signal(false);
 
-  form = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-  });
+  formData = signal<FormItems[]>([
+    {
+      label: 'Email',
+      type: 'email',
+      formControlName: 'email',
+      placeholder: 'Your email...',
+      validators: [Validators.required, Validators.email],
+    },
+    {
+      label: 'Password',
+      type: 'password',
+      formControlName: 'password',
+      placeholder: 'Password',
+      validators: [Validators.required, Validators.minLength(6)],
+    },
+  ]);
 
-  async onSubmit() {
-    if (this.form.invalid) return;
-
-    this.loading.set(true);
+  async onSubmitted(value: any) {
+    // Reset messages
     this.message.set('');
-    this.isError.set(false);
-
-    const email = this.form.value.email!;
-    const password = this.form.value.password!;
+    this.loading.set(true);
 
     try {
-      const res: any = await this.srpAuthService.login(email, password);
+      const responseData = await this.srpAuthService.login(value.email, value.password);
 
-      // If login succeeded
-      if (res?.success || res === true) {
-        this.message.set(res?.message || 'Login successful! Redirecting...');
-        this.isError.set(false);
-        setTimeout(() => this.router.navigate(['/dashboard']), 1000);
+      if (responseData === true) {
+        this.message.set('Login successful ✅');
+        console.log('Login success:', responseData);
+
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 1500);
       } else {
-        // Login failed or returned error
-        this.message.set(res?.message || 'Invalid credentials. Please try again.');
-        this.isError.set(true);
+        this.message.set('Invalid credentials. Please try again.');
       }
     } catch (err: any) {
       console.error('Login error:', err);
-      const msg =
-        err?.error?.error ||
-        err?.error?.message ||
-        err?.message ||
-        'An unexpected error occurred. Please try again.';
-      this.message.set(msg);
-      this.isError.set(true);
+      this.message.set('Something went wrong. Please try again later.');
     } finally {
       this.loading.set(false);
     }

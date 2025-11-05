@@ -1,0 +1,7 @@
+.section1 {
+  background: radial-gradient(ellipse at 60%, #f9e8f3 10%, #f9f6ff 60%, #fcfbfe 85%, #ffffff 100%),
+    linear-gradient(180deg, #f9f6ff 0%, #f5e9f2 50%, #ffffff 100%);
+}
+.section2 {
+  background: rgba(255, 56, 255, 0.027);
+}

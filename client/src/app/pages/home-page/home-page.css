@@ -1,0 +1,139 @@
+.home-page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse at 60%, #f1d2e8 10%, #f4effd 100%, #fcf9fd 70%, #ffffff 100%),
+    linear-gradient(180deg, #f4effd 0%, #f1d2e8 50%, #fcf9fd 100%);
+  background-blend-mode: lighten;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.home-page {
+  max-width: 1300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem 0rem;
+}
+.home-page-buttons {
+  display: flex;
+  gap: 0.5rem;
+  max-width: 500px;
+}
+h1 {
+  font-size: 4rem;
+  max-width: 500px;
+}
+
+.home-page-text p {
+  font-size: 1.3rem;
+  max-width: 500px;
+  color: rgba(0, 0, 0, 0.644);
+}
+.home-page-cards {
+  max-width: 700px;
+}
+strong {
+  color: #843ce3cb;
+}
+
+.home-stats {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.divider {
+  width: 1px;
+  height: 3rem;
+  background-color: #e5e5e5;
+}
+
+@media (max-width: 768px) {
+  .home-stats {
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .divider {
+    display: none;
+  }
+}
+.page-getstarted {
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  padding: 3rem;
+}
+.trusted-by {
+  background-color: #ffffffd5;
+  width: 100%;
+  z-index: 1000;
+}
+.trusted-by-shadow {
+  padding: 1rem;
+  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+  max-width: 1330px;
+  margin: 0 auto;
+  height: 120px;
+}
+.trusted-by p {
+  color: #777;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.trusted-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  opacity: 0.7;
+}
+
+.trusted-list label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2a2a2a;
+  cursor: default;
+  user-select: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.trusted-list label:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+.how-it-works {
+  background-color: #ffffffd5;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+}
+.how-it-works h1 {
+  font-size: 1.3rem;
+  color: #1e1e1ea1;
+  padding-top: 1.5rem;
+}
+.home-page-built-for-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  padding-top: 2rem;
+}
+
+.home-page-built-for-container h1 {
+  font-size: 1.3rem;
+  color: #1e1e1ea1;
+  text-align: center;
+  padding-top: 1rem;
+}

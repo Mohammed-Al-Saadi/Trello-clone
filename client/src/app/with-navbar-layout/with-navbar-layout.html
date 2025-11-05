@@ -1,5 +1,9 @@
 <app-navbar [navLinks]="navLinks()" [showLogin]="showLogin()" [logo]="logo()" [showLogo]="showLogo()">
-    <app-login-link></app-login-link>
-    <app-register-link></app-register-link>
+    <app-link-button title="Login" route="/login" buttonClass="login">
+    </app-link-button>
+
+    <app-link-button title="Register" route="/register" buttonClass="register">
+    </app-link-button>
+
 </app-navbar>
 <app-footer></app-footer>

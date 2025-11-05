@@ -15,7 +15,7 @@
                     <img [src]="logo()" alt="MyApp Logo" />
                 </a>
                 @if (showProfileName() && !checkMenuOpen) {
-                <p>John Kus</p>
+                <p>John..</p>
                 }
             </div>
             }
@@ -23,7 +23,9 @@
             <nav class="navbar__links">
                 <ul>
                     @for (link of navLinks(); track link.path) {
-                    <li routerLinkActive="active-link">
+                    <li routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+
+
                         <a [routerLink]="link.path">
                             @if (link.icon) {
                             <i [class]="link.icon"></i>
@@ -33,7 +35,6 @@
                             }
                         </a>
                     </li>
-
                     }
                 </ul>
             </nav>

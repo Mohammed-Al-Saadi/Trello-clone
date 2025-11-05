@@ -10,61 +10,70 @@ import {
 import * as srp from 'secure-remote-password/client';
 import { SrpRegisterService } from './srp-register-service';
 import { NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FormItems, ReactiveForm } from '../../components/reactive-form/reactive-form';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, ReactiveFormsModule, NgIf, RouterLink],
+  imports: [ReactiveForm, ReactiveFormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css',
   standalone: true,
 })
 export class Register {
-  form = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    passwords: new FormGroup({
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    }),
-  });
-
   private auth = inject(SrpRegisterService);
-  message = signal<string>('');
-  isError = signal<boolean>(false);
-  isLoading = signal<boolean>(false);
+  private router = inject(Router);
 
-  async onSubmit() {
-    if (this.form.invalid) return;
+  loading = signal(false);
+  message = signal('');
 
-    const username = this.form.value.username!;
-    const email = this.form.value.email!;
-    const passwords = this.form.value.passwords as any;
-    const password = passwords?.password;
-    const confirmPassword = passwords?.confirmPassword;
-    if (password !== confirmPassword) {
-      this.message.set('Passwords do not match');
-      return;
-    }
+  formData = signal<FormItems[]>([
+    {
+      label: 'Name',
+      type: 'text',
+      formControlName: 'full_name',
+      placeholder: 'Your email...',
+      validators: [Validators.required],
+    },
+    {
+      label: 'Email',
+      type: 'email',
+      formControlName: 'emailRaw',
+      placeholder: 'Your email...',
+      validators: [Validators.required, Validators.email],
+    },
+    {
+      label: 'Password',
+      type: 'password',
+      formControlName: 'password',
+      placeholder: 'Password',
+      validators: [Validators.required, Validators.minLength(6)],
+    },
+    {
+      label: 'Confirm Password',
+      type: 'password',
+      formControlName: 'confirmPassword',
+      placeholder: 'Password',
+      validators: [Validators.required, Validators.minLength(6)],
+    },
+  ]);
+
+  async onSubmitted(value: any) {
+    this.message.set('');
+    this.loading.set(true);
+
     try {
-      const res = await this.auth.register(username, email, password);
-
-      // Pick a human-readable message
-      const msg =
-        typeof res === 'string'
-          ? res
-          : res && typeof res === 'object' && 'message' in res
-          ? (res as any).message
-          : JSON.stringify(res);
-
-      this.message.set(msg);
-      this.isError.set(false);
-      this.form.reset();
+      const responseData = await this.auth.register(
+        value.full_name,
+        value.emailRaw,
+        value.password
+      );
+      console.log(responseData);
     } catch (err: any) {
-      console.error('Error:', err);
-      const backendMessage = err?.error?.message || 'Registration failed. Please try again.';
-      this.message.set(backendMessage);
-      this.isError.set(true);
+      console.error('Register error:', err);
+      this.message.set('Something went wrong. Please try again later.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }

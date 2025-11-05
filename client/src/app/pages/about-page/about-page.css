@@ -1,0 +1,60 @@
+.section1 {
+  padding-bottom: 2rem;
+  background: radial-gradient(ellipse at 60%, #f1d2e8 10%, #f4effd 100%, #fcf9fd 70%, #ffffff 100%),
+    linear-gradient(180deg, #f4effd 0%, #f1d2e8 50%, #fcf9fd 100%);
+  background-blend-mode: lighten;
+}
+.section2 {
+  padding-bottom: 2rem;
+  background: rgba(255, 20, 255, 0.041);
+  background-blend-mode: lighten;
+}
+
+.section3 {
+  background: #fafbff;
+}
+
+.story-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.story-image {
+  width: 450px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.story-text {
+  max-width: 600px;
+}
+
+.story-text h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2e2e2e;
+}
+
+.story-text p {
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.section4 {
+  background: #f9f9ff;
+}
+
+.about-page-ourTeam .card {
+  border-radius: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.about-page-ourTeam .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}

@@ -1,8 +1,11 @@
-from flask import Blueprint, request, jsonify
-from database.functions import register_srp_user, get_user_salt_verifier
+from flask import Blueprint, request, jsonify, make_response
+from database.auth import register_srp_user, get_user_salt_verifier, get_user_email
 from utils.srpUtils import N, g, H, hex64_from_int,  new_session, clean_expired_sessions,get_session, pop_session, randbits_256
-
-
+from utils.jwt_helper import create_jwt_token, verify_jwt_token
+import jwt 
+import os
+from datetime import datetime, timedelta, timezone
+from database.get_roles import get_all_roles_db
 # -----------------------------
 # WHAT IS SRP?
 # -----------------------------
@@ -71,6 +74,11 @@ def srp_register():
     if not all([full_name, email, salt_hex, verifier_hex]):
         return jsonify({"error": "Missing fields"}), 400
 
+    # Check if email already exists
+    existing_user = get_user_email(email)
+    if existing_user:
+        return jsonify({"error": "That email is already in use. Try logging in instead."}), 400
+
     try:
         # Persist as BYTEA (psycopg2 wants bytes)
         salt_bytes = bytes.fromhex(salt_hex)
@@ -132,7 +140,7 @@ def srp_login_start():
     # Pull (salt, verifier) from DB. Both stored as BYTEA.
     user = get_user_salt_verifier(email)
     if not user:
-        return jsonify({"error": "User not found"}), 404
+        return jsonify({"error": "No account found with the provided information."}), 404
 
     # psycopg2 returns BYTEA as memoryview — normalize to bytes
     salt_val = user["salt"]
@@ -252,7 +260,7 @@ def srp_login_verify():
     # If proofs mismatch, either password is wrong or tampering occurred.
     if expected_M1_int != client_M1_int:
         pop_session(session_id)
-        return jsonify({"error": "Invalid credentials"}), 403
+        return jsonify({"error": "Invalid email or password."}), 403
 
     # Server proof lets the client verify the server also computed K (mutual auth).
     M2_int = H(A, client_M1_int, K_int)
@@ -261,4 +269,104 @@ def srp_login_verify():
     # One-time handshake: destroy the session to block replays.
     pop_session(session_id)
 
-    return jsonify({"message": "Login successful", "M2": M2_hex})
+    get_user_id = get_user_email(email)
+
+    access_token = create_jwt_token(
+        {"email": email, "id": get_user_id["id"], "app_role_id" : get_user_id["app_role_id"], "type": "access"},
+        expires_in_seconds=20
+ 
+    )
+
+    refresh_token = create_jwt_token(
+        {"email": email, "id": get_user_id["id"], "type": "refresh"},
+        expires_in_seconds=3 * 60 * 60
+    )
+
+
+    from flask import jsonify, make_response
+
+    response = make_response(jsonify({
+        "message": "Login successful",
+        "M2": M2_hex
+    }))
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=True,
+        secure=True,     
+        samesite="none",    
+        max_age=20
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value=refresh_token,
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=3 * 60 * 60,
+)
+    return response
+
+check_auth_bp = Blueprint("check_auth_bp", __name__)
+@check_auth_bp.route("/protected", methods=["GET"])
+def check_auth():
+    access_token = request.cookies.get("access_token")
+    refresh_token = request.cookies.get("refresh_token")
+
+    def load_roles():
+        roles, status = get_all_roles_db()
+        return roles if status == 200 else []
+
+    if access_token:
+        decoded = verify_jwt_token(access_token)
+        if "error" not in decoded:
+            roles = load_roles()
+            return jsonify({
+                "authenticated": True,
+                "user": decoded,
+                "app-roles": roles
+            }), 200
+
+    if refresh_token:
+        decoded_refresh = verify_jwt_token(refresh_token, is_refresh=True)
+        if "error" not in decoded_refresh:
+            roles = load_roles()
+            return jsonify({
+                "authenticated": True,
+                "user": decoded_refresh,
+                "app-roles": roles
+            }), 200
+
+    return jsonify({"authenticated": False, "error": "Unauthorized"}), 401
+
+logout_bp = Blueprint("logout_bp", __name__)
+
+@logout_bp.route("/logout", methods=["POST"])
+def logout():
+    """
+    Logs out the user by clearing both access and refresh tokens.
+    """
+    response = make_response(jsonify({"message": "Successfully logged out"}))
+
+    # Remove both cookies by setting them to empty with max_age=0
+    response.set_cookie(
+        key="access_token",
+        value="",
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=0
+    )
+
+    response.set_cookie(
+        key="refresh_token",
+        value="",
+        httponly=True,
+        secure=True,
+        samesite="none",
+        max_age=0
+    )
+
+    return response, 200

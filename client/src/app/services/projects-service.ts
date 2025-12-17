@@ -10,7 +10,6 @@ export class ProjectsService {
   private http = inject(HttpClient);
   roles = signal<any[]>([]);
   toast = inject(ToastService);
-  toassssst = inject(ToastService);
 
   async addNewProject(name: string, description: string, owner_id: string, category: string) {
     const body = { name, description, owner_id, category };

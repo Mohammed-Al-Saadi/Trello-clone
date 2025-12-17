@@ -14,12 +14,12 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #333;
+  color: #ffffffd3;
 }
 
 .stat-label {
   font-size: 1rem;
-  color: #777;
+  color: #b1b1b1;
 }
 
 .divider {
@@ -29,7 +29,7 @@
 }
 
 .about-stats .stat-value {
-  color: rgba(121, 27, 121, 0.829);
+  color: rgba(255, 255, 255, 0.863);
 }
 
 .about-stats.stats-component {

@@ -2,8 +2,7 @@
   padding: 20px;
   border-radius: 12px;
   color: #fff;
-  width: 100%;
-  max-width: 800px;
+  
 }
 
 .card-title-input {
@@ -53,7 +52,7 @@
   background: #1a1a2000;
   border-radius: 12px;
   padding: 10px;
-  max-width: 800px;
+  max-width: 700px;
   max-height: 30rem;
   overflow-y: auto;
 }

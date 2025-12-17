@@ -1,29 +1,23 @@
 <div class="board-container" cdkScrollable>
-    <app-dashboard-info-panel [title]="projectName + ' » ' + boardName">
+    <app-dashboard-info-panel [title]=" boardName" [workspaceOwnerName]="ownerName">
         <button back class="back-btn" (click)="goBack()">
             <span class="material-icons">chevron_left</span>
         </button>
-
-        <div back class="proj-short">{{ getShortName(projectName) }}</div>
-
         <div content-right>
-            <app-link-button (action)="onClickOpenAddMember()" title="Add Members" buttonClass="create-project-button"
-                icon="person_add">
-            </app-link-button>
-
-            <app-link-button (action)="openManageMembers()" title="Manage Members" buttonClass="create-project-button"
-                icon="manage_accounts">
-            </app-link-button>
-        </div>
-
-        <div title-actions>
             <app-link-button (action)="onClickOpenAddList()" title="Add List" buttonClass="create-new-project-button"
                 icon="playlist_add">
+            </app-link-button>
+            <app-link-button (action)="onClickOpenAddMember()" title="Add Members"
+                buttonClass="create-new-project-button" icon="person_add">
+            </app-link-button>
+
+            <app-link-button (action)="openManageMembers()" title="Manage Members"
+                buttonClass="create-new-project-button" icon="manage_accounts">
             </app-link-button>
         </div>
 
         <div class="board-members" content-left>
-            <span class="members-label">Board Members:</span>
+            <span class="members-label">Members</span>
             <div class="members-list overlap">
                 @for (member of allBoardMembers(); track $index)
                 {
@@ -90,4 +84,5 @@
     <app-confirm-delete [show]="showDeleteModal()" title="Delete List"
         message="Are you sure you want to delete this list?" (close)="handleDelete($event)">
     </app-confirm-delete>
+
 </div>

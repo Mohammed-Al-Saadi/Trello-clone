@@ -19,16 +19,19 @@ export class ManageRoles {
   @Input() headerDescription: string = '';
   @Input() searchPlaceholder: string = 'Search...';
   @Input() context: 'project' | 'board' = 'project';
+  @Input() label: string = '';
 
   @Output() saveRole = new EventEmitter<{
     entityId: number;
     memberId: number;
     newRole: string;
+    entityRoleName: string;
   }>();
 
   @Output() deleteMember = new EventEmitter<{
     entityId: number;
     memberId: number;
+    entityRoleName: string;
   }>();
 
   get noMembersAvailable() {
@@ -41,7 +44,11 @@ export class ManageRoles {
   selectedBoard = signal<number | null>(null);
   originalRole = signal<string>('');
   showDeleteModal = signal<boolean>(false);
-  memberToDelete: { entityId: number; memberId: number } | null = null;
+  memberToDelete: {
+    entityId: number;
+    memberId: number;
+    entityRoleName: string;
+  } | null = null;
 
   filteredBoards() {
     const q = this.searchQuery.trim().toLowerCase();
@@ -71,6 +78,7 @@ export class ManageRoles {
     this.originalRole.set(member.role_name);
     this.selectedBoard.set(entity.id);
     this.selectedMember.set(member.user_id);
+    console.log(entity);
   }
 
   onSaveRole(entity: ManageEntity, member: ManageMember) {
@@ -79,10 +87,12 @@ export class ManageRoles {
       this.selectedBoard.set(null);
       return;
     }
+
     this.saveRole.emit({
       entityId: entity.id,
       memberId: member.user_id,
       newRole: member.role_name,
+      entityRoleName: entity.role_name,
     });
 
     this.selectedMember.set(null);
@@ -93,6 +103,7 @@ export class ManageRoles {
     this.selectedMember.set(null);
     this.selectedBoard.set(null);
   }
+
   handleDelete(confirm: boolean) {
     if (!confirm) {
       this.showDeleteModal.set(false);
@@ -103,16 +114,21 @@ export class ManageRoles {
       this.deleteMember.emit({
         entityId: this.memberToDelete.entityId,
         memberId: this.memberToDelete.memberId,
+        entityRoleName: this.memberToDelete.entityRoleName,
       });
     }
-    console.log(this.memberToDelete);
 
     this.showDeleteModal.set(false);
     this.memberToDelete = null;
   }
 
   onDeleteMember(entity: ManageEntity, member: ManageMember) {
-    this.memberToDelete = { entityId: entity.id, memberId: member.user_id };
+    this.memberToDelete = {
+      entityId: entity.id,
+      memberId: member.user_id,
+      entityRoleName: entity.role_name,
+    };
+
     this.showDeleteModal.set(true);
   }
 }

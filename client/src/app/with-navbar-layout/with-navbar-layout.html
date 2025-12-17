@@ -1,9 +1,14 @@
-<app-navbar [navLinks]="navLinks()" [showLogin]="showLogin()" [logo]="logo()" [showLogo]="showLogo()"
-    [showProfileImage]="showProfile()">
-    <app-link-button title="Login" (click)="onLoginClick()" buttonClass="login">
-    </app-link-button>
-    <app-link-button title="Register" route="/register" buttonClass="register">
-    </app-link-button>
+<div class="with-nave">
+    <app-landing-navbar [navLinks]="publicLinks" [logoUrl]="logoUrl">
+        <ng-template #landingAuth>
+            <app-link-button title="Login" (click)="onLoginClick()" buttonClass="login">
+            </app-link-button>
 
-</app-navbar>
-<app-footer></app-footer>
+            <app-link-button title="Register" route="/register" buttonClass="register">
+            </app-link-button>
+        </ng-template>
+    </app-landing-navbar>
+
+    <router-outlet></router-outlet>
+    <app-footer></app-footer>
+</div>

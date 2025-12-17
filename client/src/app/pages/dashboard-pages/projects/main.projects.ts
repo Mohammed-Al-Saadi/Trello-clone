@@ -78,6 +78,7 @@ export class Management {
   selectedRole = signal('');
   formData = signal<FormItems[]>([...ProjectFormData]);
   selectedRoleDescription = signal('');
+  roleName = signal('');
 
   addProjectCollaborator = signal<FormItems[]>(
     CollaboratorFormData(
@@ -106,13 +107,22 @@ export class Management {
     const user_id = event.memberId;
     const project_id = event.entityId;
     const role_name = event.newRole;
+    const project_role_name = event.entityRoleName;
+
     const role_id = this.roles().find((item) => item.name === role_name).id;
-    await this.projectMembership.editProjectUserRole(project_id, user_id, role_id);
+    await this.projectMembership.editProjectUserRole(
+      project_id,
+      user_id,
+      role_id,
+      project_role_name
+    );
   }
   async deleteMemberShip(event: any) {
+    console.log(event);
+
     const user_id = event.memberId;
     const project_id = event.entityId;
-    await this.projectMembership.deleteProjectMembership(project_id, user_id);
+    await this.projectMembership.deleteProjectMembership(project_id, user_id, event.entityRoleName);
     this.ngOnInit();
   }
   onOpenManageOwners() {
@@ -157,18 +167,12 @@ export class Management {
       .replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
-  openDeleteOwner(projectId: number, ownerId: number) {
-    this.isProjectDelete.set(false);
-    this.selectedProjectId.set(projectId);
-    this.selectedCollaboratorId.set(ownerId);
-    this.showDeleteModal.set(true);
-  }
-
-  openDeleteProject(projectId: number, ownerId: number) {
+  openDeleteProject(projectId: number, ownerId: number, role_name: string) {
     this.isProjectDelete.set(true);
     this.selectedProjectId.set(projectId);
     this.selectedCollaboratorId.set(ownerId);
     this.showDeleteModal.set(true);
+    this.roleName.set(role_name);
   }
 
   async handleDelete(confirmed: boolean) {
@@ -180,9 +184,7 @@ export class Management {
     if (!projectId || !userId) return;
 
     if (this.isProjectDelete()) {
-      await this.addProject.deleteProject(projectId, userId);
-    } else {
-      await this.projectMembership.deleteProjectMembership(projectId, userId);
+      await this.addProject.deleteProject(projectId, userId, this.roleName());
     }
 
     await this.ngOnInit();
@@ -195,10 +197,16 @@ export class Management {
       filterProjectsUtils(this.allProjects(), this.searchQuery, this.ownerFilter(), userId)
     );
   }
-
   navigateToProject(id: number) {
     const project = this.projectsData().find((p) => p.id === id);
-    this.router.navigate(['/dashboard/projects', id], { state: { projectName: project.name } });
+
+    this.router.navigate(['/dashboard/projects', id], {
+      state: {
+        projectName: project.name,
+        projectRoleName: project.role_name,
+        ownerName: project.owner_name,
+      },
+    });
   }
 
   toggleNewProjectModal() {
@@ -217,6 +225,7 @@ export class Management {
     this.showEditModel.set(true);
     this.selectedProject.set(project);
     this.formData.update((f) => populateEditFormUtils(project, f));
+    this.roleName.set(project.role_name);
   }
 
   closeEditModal() {
@@ -227,17 +236,23 @@ export class Management {
 
   async addCollaborator(form: any) {
     const project = this.allProjects().find((p) => p.name === form.project);
+    const role_name = project.role_name;
+
     if (!project) return;
+    try {
+      await this.projectMembership.addProjectMembership(
+        project.id,
+        this.roles().find((r) => r.name === form.roles)!.id,
+        form.email,
+        this.user().id,
+        role_name
+      );
 
-    await this.projectMembership.addProjectMembership(
-      project.id,
-      this.roles().find((r) => r.name === form.roles)!.id,
-      form.email,
-      this.user().id
-    );
-
-    this.showCollaboratorModel.set(false);
-    await this.ngOnInit();
+      this.showCollaboratorModel.set(false);
+      await this.ngOnInit();
+    } catch (error) {
+      this.showCollaboratorModel.set(false);
+    }
   }
 
   async createProject(form: any) {
@@ -282,17 +297,24 @@ export class Management {
       this.showEditModel.set(false);
       return;
     }
+    try {
+      await this.addProject.updateProject(
+        this.userDataState().id,
+        current.id,
+        newName,
+        newDescription,
+        newCategory,
+        form.created_at,
+        this.roleName()
+      );
 
-    await this.addProject.updateProject(
-      this.userDataState().id,
-      current.id,
-      newName,
-      newDescription,
-      newCategory,
-      form.created_at
-    );
+      this.showEditModel.set(false);
+      this.selectedProject.set(null);
 
-    this.showEditModel.set(false);
-    await this.ngOnInit();
+      await this.ngOnInit();
+    } catch (error) {
+      this.showEditModel.set(false);
+      this.selectedProject.set(null);
+    }
   }
 }

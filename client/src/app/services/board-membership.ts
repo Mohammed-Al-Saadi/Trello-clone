@@ -10,13 +10,22 @@ export class BoardMembership {
   private http = inject(HttpClient);
   private toast = inject(ToastService);
 
-  async addBoardMembership(board_id: number, role_id: number, email: string, added_by: number) {
-    const body = { board_id, role_id, email, added_by };
+  async addBoardMembership(
+    board_id: number,
+    role_id: number,
+    email: string,
+    added_by: number,
+    role_name: string
+  ) {
+    const body = { board_id, role_id, email, added_by, role_name };
 
     try {
       const response: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/add-board-membership', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -43,13 +52,16 @@ export class BoardMembership {
     }
   }
 
-  async deleteBoardMembership(board_id: number, user_id: number) {
-    const body = { board_id, user_id };
+  async deleteBoardMembership(board_id: number, user_id: number, role_name: string) {
+    const body = { board_id, user_id, role_name };
 
     try {
       const response: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/delete-board-membership', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -75,13 +87,21 @@ export class BoardMembership {
       throw error;
     }
   }
-  async updateBoardMembership(board_id: number, user_id: number, role_id: number) {
-    const body = { board_id, role_id, user_id };
+  async updateBoardMembership(
+    board_id: number,
+    user_id: number,
+    role_id: number,
+    role_name: string
+  ) {
+    const body = { board_id, role_id, user_id, role_name };
 
     try {
       const response: any = await lastValueFrom(
         this.http.put('http://127.0.0.1:8080/update-board-membership', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 

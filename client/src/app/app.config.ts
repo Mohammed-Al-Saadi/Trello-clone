@@ -1,17 +1,26 @@
 import { ApplicationConfig } from '@angular/core';
-import { provideRouter } from '@angular/router';
-
-import { routes } from './app.routes';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { AngularEditorConfig } from '@kolkov/angular-editor';
 
+import { routes } from './app.routes';
+
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)],
+  providers: [
+    provideRouter(
+      routes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'enabled',
+        anchorScrolling: 'enabled',
+      })
+    ),
+  ],
 };
 
 export const httpReq: ApplicationConfig = {
   providers: [provideHttpClient()],
 };
+
 export const editorConfig: AngularEditorConfig = {
   editable: true,
   spellcheck: true,

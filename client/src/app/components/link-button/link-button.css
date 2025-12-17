@@ -6,16 +6,19 @@ button.login {
   border-radius: 0.8rem;
   font-size: 1rem;
   font-weight: bold;
-  color: rgba(0, 0, 0, 0.637);
+  color: rgb(255, 255, 255);
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  background-color: rgba(2, 2, 2, 0.397);
+  border: 0.5px #892be26e solid;
+  width: 100%;
 }
 
 button label {
   cursor: pointer;
 }
 button.login:hover {
-  background: rgba(0, 0, 0, 0.034);
+  background: rgba(62, 53, 78, 0.596);
   transform: translateY(-2px);
 }
 
@@ -30,6 +33,7 @@ button.register {
   color: white;
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  width: 100%;
 }
 
 button.register:hover {
@@ -57,23 +61,23 @@ button.home-free-trial:hover {
 button.home-explore-button {
   font-family: Arial, Helvetica, sans-serif;
   border: none;
-  padding: 0.61rem 1rem;
+  padding: 0.81rem 1rem;
   border-radius: 0.8rem;
   font-size: 0.9rem;
   font-weight: bold;
-  color: rgb(26, 26, 26);
+  color: rgb(255, 255, 255);
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
-  background-color: white;
-  border: 2px rgba(128, 0, 128, 0.171) solid;
+  background-color: inherit;
+  border: 2px #261b40 solid;
 }
 button.home-explore-button:hover {
   background: rgba(128, 0, 128, 0.055);
+  border: 2px #4f3688 solid;
 }
 .material-icons {
   font-size: 1rem;
   vertical-align: middle;
-  margin-left: 0.3rem;
   transition: transform 0.3s ease, margin-left 0.3s ease;
 }
 
@@ -119,77 +123,37 @@ button.home-button:hover .material-icons {
   transform: translateX(-4px);
 }
 
-button.create-project-button {
-  font-family: Arial, Helvetica, sans-serif;
-  border: none;
-  padding: 0.7rem 0.8rem;
-  border-radius: 0.8rem;
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-  transition: max-width 0.35s ease, opacity 0.35s ease;
-  background: linear-gradient(90deg, #8956ff3d, #ff7b7b02);
-  border: none;
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
-  gap: 0.5rem;
-  font-weight: bold;
-  box-shadow: 0 0px 20px rgba(123, 66, 246, 0.35), 0 0 12px rgba(95, 127, 255, 0.25),
-    0 6px 10px rgba(0, 0, 0, 0.55);
-}
-button.create-project-button label {
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: max-width 3.2s ease, opacity 5.2s ease;
-}
-
-button.create-project-button:hover label {
-  max-width: 200px;
-  opacity: 1;
-  transition: max-width 0.35s ease, opacity 0.35s ease;
-}
-
-button.create-project-button .material-icons {
-  transition: transform 0.35s ease;
-  font-size: 1.3rem;
-  color: rgb(229, 230, 231);
-}
-
-button.create-project-button:hover .material-icons {
-  transform: translateX(-3px);
-}
-
 button.create-new-project-button {
   font-family: Arial, Helvetica, sans-serif;
   border: none;
-  padding: 0.7rem 0.8rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 0.8rem;
   font-size: 0.9rem;
   font-weight: bold;
   color: white;
   cursor: pointer;
-  transition: max-width 0.35s ease, opacity 0.35s ease;
-  background: #202027;
+  transition: background 0.35s ease, transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease, max-width 0.35s ease, opacity 0.35s ease;
+  background: #0c0c12;
   border: none;
   display: flex;
   align-items: center;
   flex-direction: row-reverse;
-  background: linear-gradient(90deg, #8956ff3d, #ff7b7b02);
   gap: 0.5rem;
   font-weight: bold;
-  box-shadow: 0 0px 20px rgba(123, 66, 246, 0.35), 0 0 12px rgba(95, 127, 255, 0.25),
-    0 6px 10px rgba(0, 0, 0, 0.55);
+  border: 1px #2a2a3b solid;
+  box-shadow: 0 2px 6px rgba(83, 83, 83, 0.35);
 }
 button.create-new-project-button:hover .material-icons {
   transform: unset;
 }
 button.create-new-project-button:hover {
-  background: linear-gradient(90deg, #8956ff9d, #ff7b7b4b);
+  background: linear-gradient(90deg, #8956ff70, #ff7b7b2f);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  border-color: #8956ff9a;
 }
+
 button.create-new-project-button .material-icons {
   font-size: 1.3rem;
 }
@@ -222,4 +186,15 @@ button.list-card-button:hover .material-icons {
 }
 button.list-card-button:hover {
   background: linear-gradient(90deg, #8956ff28, #ff7b7b02);
+}
+
+@media (max-width: 884px) {
+  button.create-new-project-button label {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  button.create-new-project-button {
+    padding: 0.5rem;
+  }
 }

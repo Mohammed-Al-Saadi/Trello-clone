@@ -44,6 +44,8 @@ import { LoadingSkeleton } from '../../../../components/loading-skeleton/loading
 export class ProjectPage {
   route = inject(ActivatedRoute);
   projectId = this.route.snapshot.params['project_id'];
+  projectRole = history.state.projectRoleName;
+  ownerName = history.state.ownerName;
 
   auth = inject(AuthService);
   user = this.auth.user;
@@ -89,7 +91,6 @@ export class ProjectPage {
     if (!value.startsWith('board_')) return;
     this.selectedRole.set(value);
     this.selectedRoleDescription.set(this.roleDescriptions[value] || '');
-    console.log(value);
   }
   roleDescriptions: Record<string, string> = {
     board_admin:
@@ -105,7 +106,7 @@ export class ProjectPage {
     const user_id = event.memberId;
     const role_name = event.newRole;
     const role_id = this.roles().find((r) => r.name === role_name).id;
-    this.memberMembership.updateBoardMembership(board_id, user_id, role_id);
+    this.memberMembership.updateBoardMembership(board_id, user_id, role_id, this.projectRole);
   }
   openManageBoardRoles() {
     this.showEditBoardMembershipState.update((v) => !v);
@@ -113,9 +114,8 @@ export class ProjectPage {
   async deleteMemberShip(event: any) {
     const board_id = event.entityId;
     const user_id = event.memberId;
-
     try {
-      await this.memberMembership.deleteBoardMembership(board_id, user_id);
+      await this.memberMembership.deleteBoardMembership(board_id, user_id, this.projectRole);
 
       this.ngOnInit();
     } catch (err) {
@@ -134,6 +134,7 @@ export class ProjectPage {
     try {
       const result: any = await this.boardService.getBoards(this.projectId, this.user().id);
       this.boardsData.set(result);
+      console.log(result);
 
       this.addMemberformData.update((items) => {
         const boardField = items.find((f) => f.formControlName === 'board');
@@ -162,7 +163,14 @@ export class ProjectPage {
   }
 
   async onSubmiteNewBoard(formData: any) {
-    await this.boardService.addNewBoard(this.projectId, formData.board_name, 0, formData.category);
+    await this.boardService.addNewBoard(
+      this.projectId,
+      formData.board_name,
+      0,
+      formData.category,
+      this.projectRole
+    );
+
     this.showModel.set(false);
     this.loadBoards();
   }
@@ -194,25 +202,27 @@ export class ProjectPage {
       return;
     }
 
-    await this.boardService.editBoard(oldBoard.id, currentName, currentCategory);
+    await this.boardService.editBoard(oldBoard.id, currentName, currentCategory, this.projectRole);
     this.showEditBoardState.set(false);
     this.loadBoards();
   }
-
   async onSubmiteNewMember(formData: any) {
     try {
       const selectedBoardName = formData.board;
       const selectedRoleName = formData.roles;
 
-      const board_id = this.boardsData().find((b) => b.name === selectedBoardName).id;
+      const board = this.boardsData().find((b) => b.name === selectedBoardName);
+      const board_id = board.id;
       const role_id = this.roles().find((r) => r.name === selectedRoleName).id;
 
       await this.memberMembership.addBoardMembership(
         board_id,
         role_id,
         formData.email,
-        this.user().id
+        this.user().id,
+        this.projectRole
       );
+
       this.showAddMemberModel.set(false);
       this.ngOnInit();
     } catch (e) {
@@ -228,7 +238,7 @@ export class ProjectPage {
     const boardId = this.selectedBoardId();
     if (!boardId) return;
 
-    await this.boardService.deleteBoard(this.projectId, boardId);
+    await this.boardService.deleteBoard(this.projectId, boardId, this.projectRole);
     this.loadBoards();
   }
 
@@ -241,7 +251,12 @@ export class ProjectPage {
     const projectNAme = this.projectName;
     const board = this.boardsData().find((n) => n.id === boardId);
     this.router.navigate(['/dashboard/projects', this.projectId, 'boards', boardId], {
-      state: { projectName: this.projectName, boardName: board.name },
+      state: {
+        projectName: this.projectName,
+        boardName: board.name,
+        role_name: board.role_name,
+        ownerName: this.ownerName,
+      },
     });
   }
 }

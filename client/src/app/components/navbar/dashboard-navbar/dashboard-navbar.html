@@ -1,0 +1,58 @@
+<aside class="dash-nav" [class.collapsed]="collapsed()">
+    <div class="dash-nav__top">
+        @if (logoUrl() && !collapsed()) {
+        <a routerLink="/dashboard">
+            <img [src]="logoUrl()" alt="Logo" />
+        </a>
+        }
+        <button class="dash-toggle" type="button" (click)="toggle()">
+            <mat-icon>{{ collapsed() ? 'menu' : 'close' }}</mat-icon>
+        </button>
+    </div>
+
+    @if (showProfileImage()) {
+    <div class="dash-profile">
+        <div class="member-circle">
+            {{ getShortName(profileName())}}
+        </div>
+        @if (showProfileName() && !collapsed()) {
+        <p>{{ profileName() }}</p>
+        }
+    </div>
+    }
+    <button class="notification-btn" type="button">
+        <i class="fa-solid fa-bell"></i>
+
+        @if (!collapsed()) { <span>Notifications</span> }
+
+    </button>
+
+
+    <span class="dash-sep"></span>
+
+    <nav class="dash-links">
+        <ul>
+            @for (link of navLinks(); track link.path) {
+            <li routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: false }">
+                <a [routerLink]="link.path">
+                    @if (link.icon) { <i [class]="link.icon"></i> }
+                    @if (!collapsed()) { <span>{{ link.label }}</span> }
+                </a>
+            </li>
+            }
+        </ul>
+    </nav>
+    <div class="dash-bottom">
+        <span class="dash-sep"></span>
+
+        <button class="theme-toggle-btn" type="button" (click)="toggleTheme()">
+            <i class="fa-solid" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
+            @if (!collapsed()) { <span>{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</span> }
+        </button>
+
+        <button class="logout-btn" type="button" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            @if (!collapsed()) { <span>Logout</span> }
+        </button>
+    </div>
+</aside>

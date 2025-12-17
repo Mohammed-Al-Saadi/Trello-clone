@@ -1,21 +1,21 @@
 <div class="projects-page-main">
-    <app-dashboard-info-panel [title]="projectName">
-        <app-link-button title-actions title="Create Board" icon="dashboard_customize"
-            buttonClass="create-new-project-button" (action)="onClickOpenAddBoard()"></app-link-button>
+    <app-dashboard-info-panel [title]="projectName" [workspaceOwnerName]="ownerName">
+        >
         <button back class="back-btn" (click)="goBack()">
             <span class="material-icons">chevron_left</span>
         </button>
-        <div back class="proj-short">{{ getShortName(projectName) }}</div>
         <div content-left>
             <app-floating-field label="Search Boards" type="input" icon="search" placeholder="Search..."
                 [(model)]="searchQuery">
             </app-floating-field>
         </div>
         <div content-right>
-            <app-link-button title="Add Member" buttonClass="create-project-button" icon="person_add_alt_1"
+            <app-link-button title-actions title="Create Board" icon="dashboard_customize"
+                buttonClass="create-new-project-button" (action)="onClickOpenAddBoard()"></app-link-button>
+            <app-link-button title="Add Member" buttonClass="create-new-project-button" icon="person_add_alt_1"
                 (action)="onClickOpenAddMember()">
             </app-link-button>
-            <app-link-button title="Manage Members" buttonClass="create-project-button" icon="manage_accounts"
+            <app-link-button title="Manage Members" buttonClass="create-new-project-button" icon="manage_accounts"
                 (action)="openManageBoardRoles()">
             </app-link-button>
         </div>

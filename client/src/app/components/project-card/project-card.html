@@ -1,86 +1,88 @@
-<div class="project-list">
-    @for (item of projectsData; track item.id) {
-    <div class="project-item" (click)="goToProject.emit(item.id)">
-        <div class="project-info">
+<div class="project-list-container">
+    <div class="project-list">
+        @for (item of projectsData; track item.id) {
+        <div class="project-item" (click)="goToProject.emit(item.id)">
+            <div class="project-info">
 
-            <div class="project-list-title">
-                <label class="project-initial">
-                    {{ item.name[0] | uppercase }}
-                </label>
+                <div class="project-list-title">
+                    <label class="project-initial">
+                        {{ item.name[0] | uppercase }}
+                    </label>
 
-                <div class="actions" (click)="$event.stopPropagation()">
-                    <span class="material-icons edit-icon" (click)="editProject.emit(item)">
-                        edit
-                    </span>
+                    <div class="actions" (click)="$event.stopPropagation()">
+                        <span class="material-icons edit-icon" (click)="editProject.emit(item)">
+                            edit
+                        </span>
 
-                    <span class="material-icons delete-icon"
-                        (click)="deleteProject.emit({ id: item.id, owner: item.owner_id })">
-                        delete
-                    </span>
+                        <span class="material-icons delete-icon"
+                            (click)="deleteProject.emit({ id: item.id, owner: item.owner_id , role_name: item.role_name })">
+                            delete
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <h2>{{ item.name }}</h2>
+                <h2>{{ item.name }}</h2>
 
-            @if(item.description){
-            <p class="desc">{{ item.description }}</p>
-            }
-
-            <p class="cata">{{ item.category }}</p>
-
-            @if(item.owner_name){
-            <p class="owner">Project Owner</p>
-            <p class="owner name">{{ item.owner_name }}</p>
-            <p class="owner email">{{ item.owner_email }}</p>
-            }
-
-            <div class="underline"></div>
-
-            <div class="project-meta">
-
-                @if(item.boards_count){
-                <div class="meta-item tooltip">
-                    <span class="material-icons">view_kanban</span>
-                    <span>{{ item.boards_count }}</span>
-                    <span class="tooltip-text">
-                        {{ tooltipLabels[0] || 'Boards' }}
-                    </span>
-                </div>
+                @if(item.description){
+                <p class="desc">{{ item.description }}</p>
                 }
 
-                <div class="meta-item tooltip">
-                    <span class="material-icons">group</span>
-                    <span>{{ item.members_count }}</span>
-                    <span class="tooltip-text">
-                        {{ tooltipLabels[1] || 'Members' }}
-                    </span>
-                </div>
+                <p class="cata">{{ item.category }}</p>
 
-                <div class="meta-item tooltip">
-                    <span class="material-icons">admin_panel_settings</span>
-                    <span>
-                        {{
-                        (item.project_role_name || item.user_role_name || 'Member')
-                        .replace('_', ' ')
-                        | titlecase
-                        }}
-                    </span>
-                    <span class="tooltip-text">
-                        {{ tooltipLabels[2] || 'Your Role' }}
-                    </span>
-                </div>
+                @if(item.owner_name){
+                <p class="owner">Project Owner</p>
+                <p class="owner name">{{ item.owner_name }}</p>
+                <p class="owner email">{{ item.owner_email }}</p>
+                }
 
-                <div class="meta-item tooltip">
-                    <span class="material-icons">calendar_today</span>
-                    <span>{{ item.created_at }}</span>
-                    <span class="tooltip-text">
-                        {{ tooltipLabels[3] || 'Created' }}
-                    </span>
+                <div class="underline"></div>
+
+                <div class="project-meta">
+
+                    @if(item.boards_count){
+                    <div class="meta-item tooltip">
+                        <span class="material-icons">view_kanban</span>
+                        <span>{{ item.boards_count }}</span>
+                        <span class="tooltip-text">
+                            {{ tooltipLabels[0] || 'Boards' }}
+                        </span>
+                    </div>
+                    }
+
+                    <div class="meta-item tooltip">
+                        <span class="material-icons">group</span>
+                        <span>{{ item.members_count }}</span>
+                        <span class="tooltip-text">
+                            {{ tooltipLabels[1] || 'Members' }}
+                        </span>
+                    </div>
+
+                    <div class="meta-item tooltip">
+                        <span class="material-icons">admin_panel_settings</span>
+                        <span>
+                            {{
+                            (item.role_name || 'Member')
+                            .replace('_', ' ')
+                            | titlecase
+                            }}
+                        </span>
+                        <span class="tooltip-text">
+                            {{ tooltipLabels[2] || 'Your Role' }}
+                        </span>
+                    </div>
+
+                    <div class="meta-item tooltip">
+                        <span class="material-icons">calendar_today</span>
+                        <span>{{ item.created_at | date:'MMM d y' }}</span>
+                        <span class="tooltip-text">
+                            {{ tooltipLabels[3] || 'Created' }}
+                        </span>
+                    </div>
+
                 </div>
 
             </div>
-
         </div>
+        }
     </div>
-    }
 </div>

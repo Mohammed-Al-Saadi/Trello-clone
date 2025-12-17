@@ -7,6 +7,7 @@ import { NgxHtmlEditor } from '../ngx-html-editor/ngx-html-editor';
 import { CardContentService } from '../../services/card_content';
 import { CardMembershipService } from '../../services/cards-memberships';
 import { TasksService } from '../../services/tasks';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-card-content',
@@ -24,10 +25,11 @@ export class CardContent {
 
   tempTitle = '';
   tempPriority = '';
-
+  comment = '';
   cardContentService = inject(CardContentService);
   cardMembershipService = inject(CardMembershipService);
   tasksService = inject(TasksService);
+  auth = inject(AuthService);
 
   showAssignSection = signal(false);
   selectedToAssign = signal<number[]>([]);
@@ -39,6 +41,8 @@ export class CardContent {
   isEditingDueDate = false;
   tempDueDate: string = '';
   dueDate = signal<string | null>(null);
+  cardComments = signal<any[]>([]);
+  user_id = this.auth.user();
 
   startEditHeader() {
     this.tempTitle = this.SelectedCard?.title || '';
@@ -106,6 +110,30 @@ export class CardContent {
       this.hasDescription.set(false);
     }
   }
+  async addComment() {
+    console.log(this.comment);
+    const data = await this.cardContentService.addCardComment(
+      this.SelectedCard.id,
+      this.auth.user().id,
+      this.comment
+    );
+    this.comment = '';
+    this.ngOnInit();
+  }
+  async deleteComment(comment_id: number) {
+    await this.cardContentService.deleteCardComment(comment_id);
+    this.ngOnInit();
+  }
+  async toggleAnimatedComplete() {
+    this.SelectedCard.status = !this.SelectedCard.status;
+    // update status
+    const data = await this.cardContentService.addCardContent(
+      this.SelectedCard.id,
+      undefined,
+      undefined,
+      this.SelectedCard.status
+    );
+  }
 
   async ngOnInit() {
     const data = await this.cardContentService.getCardContent(this.SelectedCard.id);
@@ -118,6 +146,9 @@ export class CardContent {
     }
     console.log(data);
     this.dueDate.set(data.content.due_date);
+    this.SelectedCard.status = data.content.status === true;
+    this.cardComments.set(data.comments);
+    console.log(this.auth.user());
   }
 
   async saveDescription(html: string) {
@@ -127,6 +158,7 @@ export class CardContent {
     await this.cardContentService.addCardContent(
       this.SelectedCard.id,
       this.cardDescription(),
+      undefined,
       undefined
     );
   }
@@ -173,9 +205,9 @@ export class CardContent {
   startEditDueDate() {
     this.isEditingDueDate = true;
 
-    this.tempDueDate = this.SelectedCard?.due_date
-      ? new Date(this.SelectedCard.due_date).toISOString().slice(0, 16)
-      : '';
+    const current = this.dueDate();
+
+    this.tempDueDate = current ? new Date(current).toISOString().slice(0, 16) : '';
   }
 
   cancelEditDueDate() {
@@ -188,7 +220,12 @@ export class CardContent {
 
       this.isEditingDueDate = false;
 
-      await this.cardContentService.addCardContent(this.SelectedCard.id, undefined, null);
+      await this.cardContentService.addCardContent(
+        this.SelectedCard.id,
+        undefined,
+        null,
+        undefined
+      );
 
       return;
     }
@@ -197,11 +234,13 @@ export class CardContent {
     this.dueDate.set(this.tempDueDate);
 
     this.isEditingDueDate = false;
-
-    // Sync with backend
-    await this.cardContentService.addCardContent(this.SelectedCard.id, undefined, this.tempDueDate);
+    await this.cardContentService.addCardContent(
+      this.SelectedCard.id,
+      undefined,
+      this.tempDueDate,
+      undefined
+    );
   }
-
   getPriorityClass(priority: string) {
     return priority?.split(' ')[0]?.toLowerCase() ?? '';
   }

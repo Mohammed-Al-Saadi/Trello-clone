@@ -1,91 +1,25 @@
-:host ::ng-deep .navbar--dashboard {
+/* Dashboard layout host fills the screen */
+:host {
+  display: block;
   height: 100vh;
   overflow: hidden;
 }
 
-:host ::ng-deep .navbar--dashboard .navbar {
+.dash-layout {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 99.9vh;
-  background-color: #14141f;
-  padding: 0rem 0rem;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-  position: relative;
-  font-family: Arial, Helvetica, sans-serif;
-  border: 1px #252537 solid;
-}
-:host {
-  overflow-x: hidden !important;
+  height: 100%;
+  overflow: hidden;
+  background-color: black;
 }
 
-:host ::ng-deep .navbar--dashboard {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-:host ::ng-deep .navbar--dashboard .navbar__links ul {
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
+.dash-nav {
+  height: 100%;
+  overflow: hidden;
+  flex: 0 0 auto;
 }
 
-:host ::ng-deep .navbar--dashboard .navbar__auth {
-  margin-top: auto;
-  border-top: 1px solid #252537;
-  padding-top: 1rem;
-  width: 100%;
-  position: relative;
-  bottom: 3rem;
-}
-:host ::ng-deep .navbar--dashboard .dash-content-display {
-  background-color: #0c0c12;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-:host ::ng-deep .navbar--dashboard .navbar__logo {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  gap: 1rem;
-  justify-content: space-evenly;
-  width: 100%;
-  padding: 1rem 2.5rem;
-  height: 3.6vh;
-}
-:host ::ng-deep .navbar--dashboard .navbar__logo img {
-  max-width: 90px;
-  height: 40px;
-}
-
-:host ::ng-deep .navbar--dashboard .display {
-  display: block;
-}
-
-:host ::ng-deep .navbar--dashboard .navbar__links li.active-link a:hover {
-  color: rgb(221, 221, 221) !important;
-}
-:host ::ng-deep .navbar--dashboard .navbar__links li.active-link a {
-  color: #ffffff !important;
-  background-color: #7c3bedf8;
-  border-radius: 0.4rem;
-  border-bottom: unset;
-  width: 100%;
-}
-:host ::ng-deep .navbar--dashboard .navbar__links ul li a {
-  padding-bottom: unset;
-  color: #a1a1aa;
-}
-:host ::ng-deep .navbar--dashboard .navbar__links ul li a:hover {
-  color: #ffffff;
-}
-:host ::ng-deep .navbar--dashboard .navbar__links a:hover {
-  background-color: rgba(206, 206, 206, 0.144);
-  border-radius: 0.4rem;
-  padding: 0.6rem 1.5rem;
-  width: 100%;
-  display: flex;
-  gap: 0.8rem;
+.dash-content {
+  flex: 1;
+  height: 100%;
+  width: 80%;
 }

@@ -7,12 +7,17 @@
 
             <div class="title-wrapper">
                 <h2>{{ title() }}</h2>
-                <p class="date">{{ today | date:'EEE, dd MMM yyyy' }}</p>
+                @if (projectOwnerLabel().length > 0) {
+                <p class="workspace-owner">{{ projectOwnerLabel() }}</p>
+                }
+
+
             </div>
         </div>
 
+
         <div class="right">
-            <ng-content select="[title-actions]"></ng-content>
+            <p class="date">{{ today | date:'EEE, dd MMM yyyy' }}</p>
         </div>
     </div>
 

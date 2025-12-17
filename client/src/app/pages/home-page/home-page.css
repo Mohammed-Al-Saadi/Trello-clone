@@ -3,19 +3,32 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(ellipse at 60%, #f1d2e8 10%, #f4effd 100%, #fcf9fd 70%, #ffffff 100%),
-    linear-gradient(180deg, #f4effd 0%, #f1d2e8 50%, #fcf9fd 100%);
-  background-blend-mode: lighten;
+
+  background: radial-gradient(
+      circle at -20% 80%,
+      rgba(0, 0, 0, 0.952) 0%,
+      rgba(0, 0, 0, 0.979) 40%,
+      rgb(0, 0, 0) 70%
+    ),
+    radial-gradient(circle at 85% 20%, rgba(255, 0, 128, 0.089) 0%, rgba(0, 0, 0, 0) 60%),
+    radial-gradient(circle at 50% 115%, rgba(80, 0, 120, 0.18) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(135deg, #07080e 0%, #090a16 40%, #0b0e19 100%);
+
+  background-blend-mode: screen;
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  z-index: 0;
 }
+
 .home-section-one {
   max-width: 1300px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 3rem;
-  padding: 2rem 0rem;
+  padding: 2rem 1rem;
+  flex-wrap: wrap;
 }
 .home-page-buttons {
   display: flex;
@@ -25,12 +38,13 @@
 h1 {
   font-size: 4rem;
   max-width: 500px;
+  color: white;
 }
 
 .home-section1-right p {
   font-size: 1.3rem;
   max-width: 500px;
-  color: rgba(0, 0, 0, 0.644);
+  color: #a1a1aa;
 }
 .home-section-two {
   max-width: 700px;
@@ -45,6 +59,7 @@ strong {
   gap: 3rem;
   margin-top: 2.5rem;
   flex-wrap: wrap;
+  color: white;
 }
 
 .divider {
@@ -54,13 +69,10 @@ strong {
 }
 
 .home-section-page-getstarted {
-  background-color: rgb(255, 255, 255);
-  width: 100%;
   padding: 3rem;
   margin-bottom: 1rem;
 }
 .home-section-trusted-by {
-  background-color: #ffffffd5;
   width: 100%;
   z-index: 1;
 }
@@ -69,10 +81,14 @@ strong {
   box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
   max-width: 1330px;
   margin: 0 auto;
-  height: 120px;
+}
+.trusted-by-shadow {
+  background-color: rgba(7, 7, 7, 0.158);
+  border-radius: 0.4rem;
+  max-width: 1200px;
 }
 .home-section-trusted-by p {
-  color: #777;
+  color: #dbdbdbf1;
   font-size: 1.2rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -90,7 +106,7 @@ strong {
 .trusted-list label {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #2a2a2a;
+  color: #ffffffde;
   cursor: default;
   user-select: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
@@ -101,7 +117,6 @@ strong {
   opacity: 1;
 }
 .home-section-how-it-works {
-  background-color: #ffffffd5;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -110,7 +125,7 @@ strong {
 }
 .home-section-how-it-works h1 {
   font-size: 1.3rem;
-  color: #1e1e1ea1;
+  color: #ffffffdc;
   padding-top: 1.5rem;
 }
 .home-section-built-for-container {
@@ -124,7 +139,7 @@ strong {
 
 .home-section-built-for-container h1 {
   font-size: 1.3rem;
-  color: #1e1e1ea1;
+  color: #ffffffdc;
   text-align: center;
   padding-top: 1rem;
 }

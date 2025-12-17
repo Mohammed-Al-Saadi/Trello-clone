@@ -10,12 +10,15 @@ export class BoardListService {
   private http = inject(HttpClient);
   toast = inject(ToastService);
 
-  async addNewBoardList(board_id: number, name: string) {
-    const body = { board_id, name };
+  async addNewBoardList(board_id: number, name: string, role_name: string) {
+    const body = { board_id, name, role_name };
     try {
       const res: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/add-board-list', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -87,12 +90,15 @@ export class BoardListService {
     }
   }
 
-  async updateListName(id: number, name: string) {
-    const data = { id, name };
+  async updateListName(id: number, name: string, role_name: string) {
+    const data = { id, name, role_name };
     try {
       const res: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/update-list-name', data, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -122,14 +128,17 @@ export class BoardListService {
     }
   }
 
-  async deleteBoardList(list_id: number) {
-    const body = { list_id };
+  async deleteBoardList(list_id: number, role_name: string) {
+    const body = { list_id, role_name };
 
     try {
       const res: any = await lastValueFrom(
         this.http.delete('http://127.0.0.1:8080/delete-board-list', {
           body,
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 

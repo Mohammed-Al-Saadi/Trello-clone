@@ -1,21 +1,33 @@
+.project-list-container {
+  overflow-y: auto;
+  padding-bottom: 24px;
+  box-sizing: border-box;
+  height: calc(100vh - 150px);
+}
+
 .project-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 1.5rem;
+  padding: 0.5rem;
+  height: auto;
 }
+
 .project-info h2 {
-  color: #ddfafa;
-  font-size: 1.4rem;
+  color: #ffffffd2;
+  font-size: 1.1rem;
   text-transform: capitalize;
   margin-top: 1rem;
-  max-width: 450px;
-  overflow: visible;
-  min-width: 300px;
+  max-width: 240px;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
+
 .project-item {
-  padding: 1.5rem;
+  padding: 1rem;
   border-radius: 10px;
   background: #14141f;
   border: 1px solid #252537;
@@ -24,7 +36,7 @@
   justify-content: space-between;
   align-items: center;
   transition: 0.2s ease;
-  max-width: 300px;
+  width: 300px;
 }
 
 .project-item:hover {
@@ -39,10 +51,11 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  background-color: #ac54ce;
-  color: white;
+  background-color: #201a3454;
+  color: #7c48d8;
   font-size: 1.2rem;
-  box-shadow: rgba(255, 255, 255, 0.1) 0px 4px 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.226), 0 4px 8px rgba(0, 0, 0, 0.274),
+    0 6px 16px rgba(125, 72, 216, 0.11), inset 0 1px 2px rgba(255, 255, 255, 0.05);
 }
 .project-list-title {
   display: flex;
@@ -69,7 +82,7 @@
 .desc {
   color: #a1a1aa;
   font-size: 1rem;
-  max-width: 300px;
+  max-width: 250px;
 
   overflow: hidden;
   white-space: nowrap;
@@ -222,4 +235,22 @@
   border-width: 6px;
   border-style: solid;
   border-color: #1f1f29 transparent transparent transparent;
+}
+
+@media (max-width: 383px) {
+  .project-info h2 {
+    font-size: 1rem;
+    text-transform: capitalize;
+    margin-top: 1rem;
+    max-width: 210px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 948px) {
+  .project-list {
+    justify-content: center;
+  }
 }

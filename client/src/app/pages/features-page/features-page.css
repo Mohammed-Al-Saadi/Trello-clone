@@ -1,10 +1,17 @@
-.section1 {
-  background: radial-gradient(ellipse at 60%, #f9e8f3 10%, #f9f6ff 60%, #fcfbfe 85%, #ffffff 100%),
-    linear-gradient(180deg, #f9f6ff 0%, #f5e9f2 50%, #ffffff 100%);
-}
-.section2 {
-  background: rgba(255, 56, 255, 0.027);
-}
 .features-section-page-getstarted {
   padding: 2rem;
+}
+
+.features-page-container {
+  background: radial-gradient(
+      circle at -20% 80%,
+      rgba(0, 0, 0, 0.952) 0%,
+      rgba(0, 0, 0, 0.979) 40%,
+      rgb(0, 0, 0) 70%
+    ),
+    radial-gradient(circle at 85% 20%, rgba(255, 0, 128, 0.089) 0%, rgba(0, 0, 0, 0) 60%),
+    radial-gradient(circle at 50% 115%, rgba(80, 0, 120, 0.18) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(135deg, #07080e 0%, #090a16 40%, #0b0e19 100%);
+
+  background-blend-mode: screen;
 }

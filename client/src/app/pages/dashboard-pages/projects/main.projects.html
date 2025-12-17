@@ -1,25 +1,26 @@
 <div class="projects-container project-modal">
     <app-dashboard-info-panel title="Projects">
         <div class="panel-container-button" title-actions>
-            <app-link-button title-actions buttonClass="create-new-project-button" title="Create a New Project"
-                icon="note_add" (action)="toggleNewProjectModal()">
-            </app-link-button>
+
         </div>
         <div content-left>
             <div content-left>
-                <app-floating-field label="Search Projects" type="input" icon="search" placeholder="Search..."
+                <app-floating-field label="Search Projects" type="input" icon="search" placeholder="Search Projects..."
                     [(model)]="searchQuery" (modelChange)="filterProjects()">
                 </app-floating-field>
-                <app-floating-field label="Select Owner" type="select" [options]="['all', 'me', 'others']"
+                <app-floating-field label="Projects" type="select" [options]="['all', 'me', 'others']"
                     [(model)]="ownerFilterValue" (modelChange)="filterProjects()">
                 </app-floating-field>
             </div>
         </div>
         <div content-right>
-            <app-link-button buttonClass="create-project-button" title="Add Owners" icon="person_add_alt_1"
+            <app-link-button title-actions buttonClass="create-new-project-button" title="New Project" icon="note_add"
+                (action)="toggleNewProjectModal()">
+            </app-link-button>
+            <app-link-button buttonClass="create-new-project-button" title="Add Owners" icon="person_add_alt_1"
                 (action)="toggleAddCollaboratorModal()">
             </app-link-button>
-            <app-link-button buttonClass="create-project-button" title="Manage Owners" icon="manage_accounts"
+            <app-link-button buttonClass="create-new-project-button" title="Manage Owners" icon="manage_accounts"
                 (action)="onOpenManageOwners()">
             </app-link-button>
         </div>
@@ -75,7 +76,8 @@
     }
     @else if (projectsData().length !== 0) {
     <app-project-card [projectsData]="projectsData()" (goToProject)="navigateToProject($event)"
-        (editProject)="populateEditForm($event)" (deleteProject)="openDeleteProject($event.id, $event.owner)"
+        (editProject)="populateEditForm($event)"
+        (deleteProject)="openDeleteProject($event.id, $event.owner, $event.role_name)"
         [tooltipLabels]="['Boards', 'Project Owners', 'Your Role', 'Created']">
     </app-project-card>
     }
@@ -83,19 +85,25 @@
     <div class="no-project-data">
         <div class="empty-message">
             <h2>No Projects Found</h2>
+            @if (ownerFilterValue !== 'others') {
             <p>Create your first project to get started!</p>
+            }
         </div>
+
+        @if (ownerFilterValue !== 'others') {
         <app-reactive-form title="Create New Project" buttonName="Create Project" [formData]="formData()"
             (submittedData)="createProject($event)" formClass="management-form-class" titleIcon="add">
         </app-reactive-form>
+        }
     </div>
     }
+
 </div>
 @if (showManageOwners()) {
 <app-model-view class="management-model" (closeModel)="onOpenManageOwners()">
     <app-manage-roles [manageRolesData]="projectsData()" [roles]="rolesList()" (deleteMember)="deleteMemberShip($event)"
         (saveRole)="onNewRole($event)" headerTitle="Project Owners Management"
         headerDescription="Managing project owners. Updating or revoking a role will remove their access to the project and all boards within it."
-        searchPlaceholder="Search by project name..." context="project"></app-manage-roles>
+        searchPlaceholder="Search by Name..." context="project" label="Search project"></app-manage-roles>
 </app-model-view>
 }

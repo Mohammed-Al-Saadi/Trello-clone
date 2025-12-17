@@ -1,111 +1,147 @@
-@if (showCardContent()) {
-<app-model-view class="management-model" (closeModel)="closeEditor()">
-    <app-card-content class="card-content-container" [boardMembers]="boardMembers" (close)="closeEditor()"
-        [SelectedCard]="SelectedCard()">
-    </app-card-content>
-</app-model-view>
-}
+<div class="board-scroll-indicator" *ngIf="canScroll">
+    <div class="padding">
+        <span class="material-icons scroll-arrow left" (click)="scroll(-300)">
+            arrow_back_ios
+        </span>
+    </div>
 
-<div class="board-lists-container" cdkDropList [cdkDropListData]="lists" cdkDropListOrientation="horizontal"
-    (cdkDropListDropped)="dropList($event)">
+    <div class="dots-container">
+        <div *ngFor="let list of lists; let i = index" class="dot" [class.active]="i === activeListIndex"></div>
+    </div>
 
-    @for (list of lists; track list.id) {
-    <div cdkDrag>
-        <div class="board-list-column">
-            <div class="list-top-row">
-                <input type="text" [value]="list.name" (blur)="renameList(list.id, $event.target.value)" />
-                <span class="material-icons delete-list-icon" (click)="onClickOpenDeleteList(list.id)">
-                    delete
-                </span>
-            </div>
-            <button class="add-task-btn" (click)="onOpenAddCard(list.id)">
-                <span class="material-icons">add</span>
-                Add Task
-            </button>
+    <div class="padding">
+        <span class="material-icons scroll-arrow right" (click)="scroll(300)">
+            arrow_forward_ios
+        </span>
+    </div>
+</div>
 
-            <!-- Add Card Form -->
-            @if(showAddCard() === list.id) {
-            <div class="add-card-container">
-                <input type="text" placeholder="Card name..." [(ngModel)]="newCardTitle"
-                    (keyup.enter)="onSubmitCard(list.id)" (blur)="cardTitleTouched = true" />
-                @if(noCardTitle() && cardTitleTouched) {
-                <div class="error">Card name is required.</div>
-                }
-                <div class="priority-row">
-                    <select class="priority-select" [(ngModel)]="newCardPriority">
-                        <option value="" disabled selected hidden>Select Priority</option>
-                        <option value="low priority">Low priority</option>
-                        <option value="medium priority">Medium priority</option>
-                        <option value="high priority">High priority</option>
-                    </select>
-                    <button class="add-card-btn" (click)="onSubmitCard(list.id)">Add Card</button>
-                </div>
-            </div>
-            }
+<div class="board-lists-container-main" cdkScrollable #boardScroll>
+    @if (showCardContent()) {
+    <app-model-view class="management-model" (closeModel)="closeEditor()">
+        <app-card-content class="card-content-container" [boardMembers]="boardMembers" (close)="closeEditor()"
+            [SelectedCard]="SelectedCard()">
+        </app-card-content>
+    </app-model-view>
+    }
 
-            <!-- Cards List -->
-            <div cdkDropListGroup>
-                <div class="cards-list" cdkDropList [cdkDropListData]="list.cards"
-                    (cdkDropListDropped)="dropCard($event, list)" [cdkDropListConnectedTo]="listIds"
-                    id="{{'list-' + list.id}}">
+    <div class="board-lists-container" #listsDrop="cdkDropList" cdkDropList [cdkDropListData]="lists"
+        cdkDropListOrientation="horizontal" [cdkDropListAutoScrollDisabled]="false" [cdkDropListAutoScrollStep]="5"
+        (cdkDropListDropped)="dropList($event)">
+        @for (list of lists; track list.id) {
+        <div cdkDrag [cdkDragLockAxis]="'x'" [cdkDragBoundary]="'.board-lists-scroll'">
+            <div class="board-list-column">
+                <div class="board-list-header">
+                    <div class="list-top-row">
+                        <input type="text" [value]="list.name" (blur)="renameList(list.id, $event.target.value)" />
+                        <span class="material-icons delete-list-icon" (click)="onClickOpenDeleteList(list.id)">
+                            delete
+                        </span>
+                    </div>
 
-                    @if(list.cards?.length === 0) {
-                    <div class="drop-zone">Drop card here</div>
-                    }
+                    <button class="add-task-btn" (click)="onOpenAddCard(list.id)">
+                        <span class="material-icons">add</span>
+                        Add Task
+                    </button>
 
-                    @for (card of list.cards; track card.id) {
-                    <div cdkDrag class="cards-list-item">
-                        <div class="card-item" (click)="showCardContentModel(card); $event.stopPropagation()">
-                            <div class="row">
-                                <div class="priority-badge" [ngClass]="getPriorityClass(card.priority)"
-                                    [attr.data-label]="card.priority"></div>
-                                <p>{{ card.title }}</p>
-                            </div>
+                    @if(showAddCard() === list.id) {
+                    <div class="add-card-container">
+                        <input type="text" placeholder="Card name..." [(ngModel)]="newCardTitle"
+                            (keyup.enter)="onSubmitCard(list.id)" (blur)="cardTitleTouched = true" />
+                        @if(noCardTitle() && cardTitleTouched) {
+                        <div class="error">Card name is required.</div>
+                        }
 
-                            <div class="card-menu-wrapper">
-                                <span class="material-icons card-menu-trigger"
-                                    (click)="toggleCardMenu(card.id, $event); $event.stopPropagation()">
-                                    more_vert
-                                </span>
+                        <div class="priority-row">
+                            <select class="priority-select" [(ngModel)]="newCardPriority">
+                                <option value="" disabled selected hidden>Select Priority</option>
+                                <option value="low priority">Low priority</option>
+                                <option value="medium priority">Medium priority</option>
+                                <option value="high priority">High priority</option>
+                            </select>
 
-                                @if(openMenuCardId === card.id) {
-                                <div class="card-menu" (click)="$event.stopPropagation()">
-                                    <button (click)="openDeleteCard(card.id); $event.stopPropagation()">
-                                        Delete Card
-                                    </button>
-                                </div>
-                                }
-
-                            </div>
-                        </div>
-
-                        <div class="underline"></div>
-                        <div class="created-at-row">
-                            <div class="created-at-left">
-                                <span class="material-icons">event</span>
-                                <p>{{ card.created_at | date:'MMM d yyyy' }}</p>
-                            </div>
-                            <div class="members-list overlap">
-                                @for (m of card.members; track $index) {
-                                <div class="member-circle">
-                                    {{ getShortName(m.full_name) }}
-                                </div>
-                                }
-                            </div>
+                            <button class="add-card-btn" (click)="onSubmitCard(list.id)">
+                                Add Card
+                            </button>
                         </div>
                     </div>
                     }
                 </div>
+
+                <div cdkDropListGroup>
+                    <div class="cards-list" cdkDropList [cdkDropListData]="list.cards"
+                        (cdkDropListDropped)="dropCard($event, list)" [cdkDropListConnectedTo]="listIds"
+                        id="{{ 'list-' + list.id }}" [cdkDropListAutoScrollDisabled]="false"
+                        [cdkDropListAutoScrollStep]="10">
+                        @if(list.cards?.length === 0) {
+                        <div class="drop-zone">Drop card here</div>
+                        }
+
+                        @for (card of list.cards; track card.id) {
+                        <div cdkDrag class="cards-list-item">
+                            <div class="card-item" (click)="showCardContentModel(card); $event.stopPropagation()">
+                                <div class="row">
+                                    <div class="priority-badge" [ngClass]="getPriorityClass(card.priority)"
+                                        [attr.data-label]="card.priority"></div>
+                                    <p>{{ card.title }}</p>
+                                </div>
+
+                                <div class="card-menu" (click)="$event.stopPropagation()">
+                                    <button class="menu-btn"
+                                        (click)="openDeleteCard(card.id); $event.stopPropagation()">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            @if (card.due_date && card.status !== true) {
+                            <div class="underline"></div>
+                            <div class="due-date-chip" [ngClass]="getDueClass(card.due_date)">
+                                <span class="material-icons due-icon">schedule</span>
+                                <span class="due-text">
+                                    Due date: {{ card.due_date | date:'MMM d, yyyy' }}
+                                </span>
+                            </div>
+                            }
+
+                            @if (card.status === true) {
+                            <div class="underline"></div>
+                            <div class="status-chip completed">
+                                <span class="material-icons status-icon">task_alt</span>
+                                <span class="status-text">Completed</span>
+                            </div>
+                            }
+
+                            <div class="underline"></div>
+
+                            <div class="created-at-row">
+                                <div class="created-at-left">
+                                    <span class="material-icons">event</span>
+                                    <p>Created: {{ card.created_at | date:'MMM d yyyy' }}</p>
+                                </div>
+
+                                <div class="members-list overlap">
+                                    @for (m of card.members; track $index) {
+                                    <div class="member-circle">
+                                        {{ getShortName(m.full_name) }}
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
+        }
     </div>
-    }
+
+    <app-confirm-delete [show]="showDeleteListModal()" title="Delete List"
+        message="Are you sure you want to delete this list?" (close)="handleDeleteList($event)">
+    </app-confirm-delete>
+
+    <app-confirm-delete [show]="showDeleteCardModal()" title="Delete Card"
+        message="Are you sure you want to delete this card?" (close)="handleDeleteCard($event)">
+    </app-confirm-delete>
 </div>
-
-<app-confirm-delete [show]="showDeleteListModal()" title="Delete List"
-    message="Are you sure you want to delete this list?" (close)="handleDeleteList($event)">
-</app-confirm-delete>
-
-<app-confirm-delete [show]="showDeleteCardModal()" title="Delete Card"
-    message="Are you sure you want to delete this card?" (close)="handleDeleteCard($event)">
-</app-confirm-delete>

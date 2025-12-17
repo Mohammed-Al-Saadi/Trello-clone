@@ -3,10 +3,24 @@
  **************************************/
 .board-container {
   position: relative;
-  transform: translateZ(0);
-  will-change: transform;
-}
 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.management-model {
+  position: fixed;
+  left: 22rem;
+  right: 3rem;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(8, 8, 8, 0.603);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  z-index: 1000;
+}
 /**************************************
  * BOARD HEADER (NAME + MEMBERS)
  **************************************/
@@ -101,4 +115,28 @@
 .role-name {
   color: #f8f7f8;
   font-weight: 600;
+}
+@media (max-width: 600px) {
+  .board-members {
+    font-size: 0.9rem;
+  }
+  .member-circle {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .board-container .board-info-panel {
+    order: 999;
+    margin-top: auto;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .members-label {
+    display: none;
+    margin-left: 1rem;
+  }
+}
+
+.board-container .app-board-lists {
+  flex: 1 1 auto;
 }

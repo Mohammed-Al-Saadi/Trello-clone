@@ -1,13 +1,10 @@
 /* WRAPPER */
 .floating-box {
   position: relative;
-  width: 210px;
   padding: 0.2rem;
-
   background: #0c0c12;
   border: 1px solid #2a2a3b;
   border-radius: 8px;
-
   color: #e5e5e5;
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
@@ -39,7 +36,7 @@
 
 /* INPUT FIELD */
 .input-box input {
-  width: 100%;
+  width: 190px;
   padding: 0.4rem 0.5rem;
   font-size: 14px;
   color: #fff;
@@ -63,20 +60,16 @@
 
 /* SELECT BOX */
 .select-box select {
-  width: 100%;
+  width: 70px;
   padding: 0.4rem 0.5rem;
-
   background: transparent;
   color: #fff;
   font-size: 14px;
-
   border: none;
   outline: none;
-
   /* disable default arrow */
   appearance: none;
   -webkit-appearance: none;
-
   /* custom arrow */
   background-image: url("data:image/svg+xml;utf8,<svg fill='%239a9aa7' height='18' width='18' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
@@ -88,4 +81,16 @@
 select option {
   background: #1a1a22;
   color: #fff;
+}
+
+@media (max-width: 382px) {
+  .input-box input {
+    width: 160px;
+    padding: 0.3rem;
+  }
+  .select-box select {
+    padding: 0.3rem;
+    max-width: 60px;
+  }
+  
 }

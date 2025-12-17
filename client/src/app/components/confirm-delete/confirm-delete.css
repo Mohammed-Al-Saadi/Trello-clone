@@ -22,6 +22,7 @@
   font-family: 'Inter', sans-serif;
   z-index: 20000;
   transition: transform 0.2s ease, opacity 0.2s ease;
+  margin: 1rem;
 }
 
 /* Title */

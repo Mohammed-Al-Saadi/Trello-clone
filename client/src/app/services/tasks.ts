@@ -40,12 +40,15 @@ export class TasksService {
     }
   }
 
-  async deleteTask(card_id: number) {
-    const body = { card_id };
+  async deleteTask(card_id: number, role_name: string) {
+    const body = { card_id, role_name };
     try {
       const res: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/delete-cards', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -77,23 +80,9 @@ export class TasksService {
           withCredentials: true,
         })
       );
-
-      if (res?.message) {
-        this.toast.showMessage({
-          id: 1,
-          type: 'success',
-          text: res.message,
-        });
-      }
     } catch (error: any) {
       const backendMessage =
         error?.error?.error || error?.error?.details || error?.message || 'Something went wrong';
-
-      this.toast.showMessage({
-        id: 1,
-        type: 'error',
-        text: backendMessage,
-      });
 
       throw error;
     }
@@ -106,24 +95,9 @@ export class TasksService {
           withCredentials: true,
         })
       );
-
-      if (res?.message) {
-        this.toast.showMessage({
-          id: 1,
-          type: 'success',
-          text: res.message,
-        });
-      }
     } catch (error: any) {
       const backendMessage =
         error?.error?.error || error?.error?.details || error?.message || 'Something went wrong';
-
-      this.toast.showMessage({
-        id: 1,
-        type: 'error',
-        text: backendMessage,
-      });
-
       throw error;
     }
   }

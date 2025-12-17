@@ -5,18 +5,19 @@
   align-items: center;
   justify-content: center;
   padding-top: 2rem;
+  
 }
 p {
   max-width: 900px;
   text-align: center;
   font-size: 1.5rem;
-  color: rgba(0, 0, 0, 0.63);
+  color: #a1a1aa;
 }
 h1 {
   max-width: 600px;
   text-align: center;
   font-size: 3.3rem;
-  color: rgba(0, 0, 0, 0.822);
+  color: white;
 }
 label {
   background: linear-gradient(

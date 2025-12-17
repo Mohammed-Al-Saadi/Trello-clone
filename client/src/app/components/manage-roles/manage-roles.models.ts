@@ -10,4 +10,5 @@ export interface ManageEntity {
   id: number;
   name: string;
   members: ManageMember[];
+  role_name: string;
 }

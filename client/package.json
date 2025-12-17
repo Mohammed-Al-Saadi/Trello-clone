@@ -35,6 +35,7 @@
     "@kolkov/angular-editor": "^3.0.3",
     "@ngrx/store": "^20.1.0",
     "ckeditor5-build-full": "^25.0.0",
+    "js-sha256": "^0.11.1",
     "ngx-editor": "^19.0.0-beta.1",
     "ngx-toastr": "^19.1.0",
     "quill": "^2.0.3",

@@ -10,8 +10,14 @@ export class ProjectMembership {
   private http = inject(HttpClient);
   private toast = inject(ToastService);
 
-  async addProjectMembership(project_id: number, role_id: number, email: string, added_by: number) {
-    const body = { project_id, role_id, email, added_by };
+  async addProjectMembership(
+    project_id: number,
+    role_id: number,
+    email: string,
+    added_by: number,
+    role_name: string
+  ) {
+    const body = { project_id, role_id, email, added_by, role_name };
 
     try {
       const response: any = await lastValueFrom(
@@ -43,13 +49,16 @@ export class ProjectMembership {
     }
   }
 
-  async deleteProjectMembership(project_id: number, user_id: number) {
+  async deleteProjectMembership(project_id: number, user_id: number, role_name: string) {
     const body = { project_id, user_id };
 
     try {
       const response: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/delete-project-membership', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 
@@ -76,13 +85,21 @@ export class ProjectMembership {
     }
   }
 
-  async editProjectUserRole(project_id: number, user_id: number, role_id: number) {
-    const body = { project_id, user_id, role_id };
+  async editProjectUserRole(
+    project_id: number,
+    user_id: number,
+    role_id: number,
+    role_name: string
+  ) {
+    const body = { project_id, user_id, role_id, role_name };
 
     try {
       const response: any = await lastValueFrom(
         this.http.post('http://127.0.0.1:8080/edit-project-membership', body, {
           withCredentials: true,
+          headers: {
+            'X-Role-Name': role_name || '',
+          },
         })
       );
 

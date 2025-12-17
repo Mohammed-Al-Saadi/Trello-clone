@@ -226,3 +226,15 @@
   font-size: 12px;
   color: #555;
 }
+@media (max-width: 500px) {
+  .management-form-class.reactive-form h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .reactive-form {
+    width: 98%;
+    margin: 0 auto;
+  }
+}

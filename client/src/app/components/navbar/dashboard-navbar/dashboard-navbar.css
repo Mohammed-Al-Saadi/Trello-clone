@@ -1,0 +1,278 @@
+/* ─────────────────────────────
+   Sidebar Base
+───────────────────────────── */
+.dash-nav {
+  background: #101018;
+  color: white;
+  width: 260px;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  padding: 1rem;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.45), 2px 0 8px rgba(0, 0, 0, 0.25);
+  transition: width 0.3s ease;
+}
+.member-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #3a1f5d62, #5b2e8b6c);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.226), 0 4px 8px rgba(0, 0, 0, 0.274),
+    0 6px 16px rgba(125, 72, 216, 0.11), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+/* Collapsed state — icons only */
+.dash-nav.collapsed {
+  width: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 0;
+}
+
+/* ─────────────────────────────
+   Toggle Button (inside nav)
+───────────────────────────── */
+.dash-toggle {
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  background-color: #252537;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.226), 0 4px 8px rgba(0, 0, 0, 0.274),
+    0 6px 16px rgba(125, 72, 216, 0.11), inset 0 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.dash-toggle:hover {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+/* ─────────────────────────────
+   Header Section
+───────────────────────────── */
+.dash-nav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dash-nav__top img {
+  width: 140px;
+  transition: opacity 0.3s ease;
+}
+
+/* Hide logo when collapsed */
+.dash-nav.collapsed .dash-nav__top img {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────
+   Profile Section
+───────────────────────────── */
+.dash-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.dash-profile img {
+  width: 40px;
+}
+
+.dash-profile p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Hide name when collapsed */
+.dash-nav.collapsed .dash-profile p {
+  display: none;
+}
+
+/* ─────────────────────────────
+   Divider
+───────────────────────────── */
+.dash-sep {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: #252537;
+  margin: 1rem 0;
+}
+
+/* ─────────────────────────────
+   Navigation Links
+───────────────────────────── */
+.dash-links ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.dash-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.dash-links a:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.dash-links li.active-link a {
+  color: #c87cff;
+  background: #74747417;
+  font-weight: bold;
+}
+
+.dash-links i {
+  font-size: 1.4rem;
+  width: 24px;
+  text-align: center;
+}
+
+/* Center icons when collapsed */
+.dash-nav.collapsed .dash-links a {
+  justify-content: center;
+  gap: 0;
+}
+
+.dash-nav.collapsed .dash-links span {
+  display: none;
+}
+.logout-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-align: left;
+}
+
+.logout-btn i {
+  font-size: 1.4rem;
+  width: 24px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+/* Hover effect same as nav links */
+.logout-btn:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.logout-btn:hover i {
+  transform: translateX(3px);
+}
+
+/* Keep icon centered when collapsed */
+.dash-nav.collapsed .logout-btn {
+  justify-content: center;
+  gap: 0;
+}
+
+.dash-nav.collapsed .logout-btn span {
+  display: none;
+}
+.theme-toggle-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+  text-align: left;
+}
+
+.theme-toggle-btn i {
+  font-size: 1.4rem;
+  width: 24px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.theme-toggle-btn:hover i {
+  transform: rotate(20deg);
+}
+
+/* When collapsed */
+.dash-nav.collapsed .theme-toggle-btn {
+  justify-content: center;
+  gap: 0;
+}
+
+.dash-nav.collapsed .theme-toggle-btn span {
+  display: none;
+}
+.dash-bottom {
+  position: absolute;
+  bottom: 4rem;
+  width: 90%;
+}
+.notification-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.notification-btn i {
+  font-size: 1.5rem;
+}

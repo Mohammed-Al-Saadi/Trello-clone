@@ -1,36 +1,29 @@
 <div class="card-container">
-
-    <!-- HEADER -->
     <div class="header">
-        <!-- CLOSE BUTTON -->
-        <button class="close-btn" (click)="close.emit()">
-            <span class="material-icons">close</span>
-        </button>
-
-        <div class="title-row">
-            <div class="card-initial">
-                {{ SelectedCard?.title?.charAt(0) }}
+        <div class="title-row" *ngIf="!isEditingHeader">
+            <div class="priority-pill" [attr.title]="SelectedCard?.priority +' priority'" (click)="startEditHeader()"
+                [ngClass]="getPriorityClass(SelectedCard?.priority)">
             </div>
+            <h1 class="title-hover" (click)="startEditHeader()">{{ SelectedCard?.title }}</h1>
 
-            <h1>{{ SelectedCard?.title }}</h1>
-
-            <div class="priority-pill" [ngClass]="getPriorityClass(SelectedCard?.priority)">
-                {{ SelectedCard?.priority }}
-            </div>
-
-            <button class="title-edit-btn" (click)="startEditHeader()">
-                <span class="material-icons">edit</span>
-            </button>
         </div>
         <div class="title-row edit" *ngIf="isEditingHeader">
-            <input class="title-input" [(ngModel)]="tempTitle" />
+            <div class="edit-card-container">
+                <div class="priority">
+                    <label>Priority</label>
+                    <select class="priority-select" [(ngModel)]="tempPriority">
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="edit-title">
+                    <label>Edit Card Title</label>
+                    <input class="title-input" [(ngModel)]="tempTitle" />
+                </div>
 
-            <select class="priority-select" [(ngModel)]="tempPriority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-            <div>
+            </div>
+            <div class="row-buttons">
                 <button class="save-btn" (click)="saveHeader()">
                     <span class="material-icons">check</span>
                 </button>
@@ -44,32 +37,40 @@
 
         <div class="due-row">
             <span class="material-icons">calendar_today</span>
-
             <p>
                 Created: {{ SelectedCard?.created_at | date:'MMMM d, y' }}
                 &nbsp;•&nbsp;
-
-                Due date: {{ dueDate() ? (dueDate() | date:'MMMM d, y') : 'Not set' }}
-
             </p>
+            @if(isEditingDueDate) {
+            <div class="due-edit-box">
+                <input type="datetime-local" [(ngModel)]="tempDueDate" class="due-date-picker" />
 
-            <button class="edit-due-icon-btn" (click)="startEditDueDate()">
-                <span class="material-icons">edit</span>
-            </button>
+                <button class="save-btn" (click)="saveDueDate()">
+                    <span class="material-icons">check</span>
+                </button>
+                <button class="cancel-btn" (click)="cancelEditDueDate()">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            }@else{ <p class="due-date" (click)="startEditDueDate()">
+                Due date: {{ dueDate() ? (dueDate() | date:'MMMM d, y') : 'Not set' }}
+            </p>
+            }
+            &nbsp;•&nbsp;
+            <div class="status-row">
+                <label class="animated-complete" (click)="toggleAnimatedComplete()">
+
+                    <span class="circle" [class.completed]="SelectedCard?.status"></span>
+
+                    <span class="label-text">
+                        {{ SelectedCard?.status ? 'Completed' : 'Mark as Complete' }}
+                    </span>
+
+                </label>
+            </div>
+
+
         </div>
-
-        @if(isEditingDueDate) {
-        <div class="due-edit-box">
-            <input type="datetime-local" [(ngModel)]="tempDueDate" class="due-date-picker" />
-
-            <button class="save-btn" (click)="saveDueDate()">
-                <span class="material-icons">check</span>
-            </button>
-            <button class="cancel-btn" (click)="cancelEditDueDate()">
-                <span class="material-icons">close</span>
-            </button>
-        </div>
-        }
     </div>
 
     <hr />
@@ -100,15 +101,16 @@
             @if (unassignedMembers.length) {
             <div class="assign-list">
                 @for (m of unassignedMembers; track $index) {
-                <label>
+                <label class="checkbox-label">
                     <input type="checkbox" (change)="toggleAssign(m, $event.target.checked)" />
-                    {{ getShortName(m.full_name) }}
+                    {{ (m.email) }}
                 </label>
                 }
             </div>
 
-            <button class="assign-btn" (click)="assignSelected()">Assign</button>
-            <button class="assign-btn" (click)="openAssignMember()">Cancel</button>
+
+            <button class="assign-btn assign" (click)="assignSelected()">Assign</button>
+            <button class="assign-btn cancel" (click)="openAssignMember()">Cancel</button>
 
             }
 
@@ -121,12 +123,18 @@
             <h3>Already Assigned</h3>
             @for (m of SelectedCard?.members; track $index) {
             <div class="assigned-item">
-                <span>{{ getShortName(m.full_name) }}</span>
+                <span>{{ (m.email) }}</span>
                 <button class="remove-btn" (click)="removeAssigned(m)">
                     <span class="material-icons">delete</span>
                 </button>
             </div>
             }
+            @empty {
+            <div class="no-members">
+                No members assigned
+            </div>
+            }
+
         </div>
         }
 
@@ -172,27 +180,47 @@
 
 
     </section>
-
     <hr />
-
-
-
-
-
-    <!-- COMMENTS SECTION (UI Only for now) -->
     <section class="section comments-section">
         <div class="section-title">
             <span class="material-icons">chat_bubble</span>
-            Comments (0)
+            Comments ({{ cardComments().length }})
         </div>
 
         <div class="comment-input">
-            <div class="avatar small">{{ getShortName(SelectedCard?.title) }}</div>
-
-            <input placeholder="Write a comment..." />
-            <button class="send-btn">
+            <input placeholder="Write a comment..." [(ngModel)]="comment" />
+            <button class="send-btn" (click)="addComment()">
                 <span class="material-icons">send</span>
             </button>
         </div>
+
+        @if (cardComments().length === 0) {
+        <p class="no-comments">No comments yet</p>
+        }
+        @if (cardComments().length > 0) {
+        <div class="comments-list">
+            <div class="comment-item" *ngFor="let c of cardComments()">
+                <div class="avatar small">{{ getShortName(c.user_name) }}</div>
+
+                <div class="comment-content">
+                    <div class="comment-header">
+                        <strong class="comment-username">{{ c.user_name }}</strong>
+                        <span class="comment-date">{{ c.created_at }}</span>
+                    </div>
+
+                    <div class="comment-text-box">
+                        <p>{{ c.comment }}</p>
+                    </div>
+
+                    <div class="comment-actions">
+                        <span (click)="deleteComment(c.id)">Delete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
     </section>
+
+
+
 </div>

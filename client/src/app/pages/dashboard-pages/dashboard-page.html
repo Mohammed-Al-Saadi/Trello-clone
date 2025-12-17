@@ -1,6 +1,7 @@
-<app-navbar [navLinks]="navLinks()" [showLogin]="showLogin()" [logo]="logo()" [showLogo]="showLogo()"
-    [showProfileName]="true" [showMenuIcon]="true" navbarClass="navbar--dashboard" [showProfileImage]="showProfile()"
-    [profileImage]="profileImage()">
-
-    <button (click)="logout()">logout</button>
-</app-navbar>
+<div class="dash-layout">
+    <app-dashboard-navbar [navLinks]="dashboardLinks" [logoUrl]="logoUrl" [showProfileImage]="true"
+        [showProfileName]="true" [profileImage]="profileImage" [profileName]="profileName"></app-dashboard-navbar>
+    <main class="dash-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

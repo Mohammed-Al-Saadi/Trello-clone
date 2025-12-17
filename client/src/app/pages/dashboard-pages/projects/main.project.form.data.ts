@@ -7,7 +7,7 @@ export const ProjectFormData: FormItems[] = [
     type: 'text',
     formControlName: 'project_name',
     placeholder: 'Your project...',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(50)],
     options: [],
   },
   {
@@ -15,7 +15,7 @@ export const ProjectFormData: FormItems[] = [
     type: 'textarea',
     formControlName: 'description',
     placeholder: 'Description...',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(150)],
     options: [],
   },
   {
@@ -24,7 +24,7 @@ export const ProjectFormData: FormItems[] = [
     formControlName: 'category',
     placeholder: 'Choose or type a category',
     options: ['Web App', 'Mobile App', 'AI Tool', 'Internal'],
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(30)],
     allowTyping: true,
   },
   {
@@ -116,7 +116,7 @@ export const editBoardsFormData: FormItems[] = [
     type: 'text',
     formControlName: 'name',
     placeholder: 'Name...',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(50)],
     options: [],
   },
   {
@@ -125,7 +125,7 @@ export const editBoardsFormData: FormItems[] = [
     formControlName: 'category',
     placeholder: 'Select category.. ',
     options: ['General', 'Design', 'Development', 'Testing', 'Review', 'Deployment'],
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(50)],
     allowTyping: true,
   },
 ];
@@ -136,7 +136,7 @@ export const newBoardFormData: FormItems[] = [
     type: 'text',
     formControlName: 'board_name',
     placeholder: 'Your board...',
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(50)],
     options: [],
   },
   {
@@ -145,7 +145,7 @@ export const newBoardFormData: FormItems[] = [
     formControlName: 'category',
     placeholder: 'Select board.. ',
     options: ['General', 'Design', 'Development', 'Testing', 'Review', 'Deployment'],
-    validators: [Validators.required],
+    validators: [Validators.required, Validators.maxLength(50)],
     allowTyping: true,
   },
 ];

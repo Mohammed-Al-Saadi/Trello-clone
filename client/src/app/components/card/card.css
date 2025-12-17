@@ -11,13 +11,12 @@
 h3 {
   font-weight: 550;
   font-size: 1rem;
+  color: rgba(255, 255, 255, 0.904);
 }
 
 p {
-  color: #000000b7;
+  color: rgba(255, 255, 255, 0.781);
   font-size: 0.9rem;
-  position: relative;
-  top: -0.3rem;
 }
 
 .card {
@@ -56,7 +55,7 @@ p {
 .card-container.home-page-getstarted {
   border-radius: 0.4rem;
   text-align: center;
-  background: linear-gradient(135deg, #9b5cf7 0%, #d94ff8 50%, #f16a8a 100%);
+  background: linear-gradient(135deg, #9a5cf754 0%, #d94ff860 50%, #f16a8a65 100%);
   max-width: 1250px;
   display: flex;
   justify-content: center;
@@ -107,13 +106,14 @@ p {
 }
 
 .home-page-discription-card .card {
-  background-color: #fff;
+  background-color: #1a1622;
   border-radius: 1rem;
   padding: 1.5rem;
   width: 280px;
-  box-shadow: 0 0 20px rgba(154, 92, 247, 0.28), 0 0 40px rgba(217, 79, 248, 0.25),
-    0 0 60px rgba(241, 106, 138, 0.2);
+  box-shadow: 0 0 14px rgba(154, 92, 247, 0.08), 0 0 28px rgba(217, 79, 248, 0.06),
+    0 0 42px rgba(241, 106, 138, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: rgba(41, 40, 70, 0.925) 1px solid;
 }
 
 .home-page-discription-card .card:hover {
@@ -133,6 +133,8 @@ p {
   max-width: 200px;
   background-color: white;
   height: 200px;
+  background-color: #1a162280;
+  border: rgba(41, 40, 70, 0.925) 1px solid;
 }
 
 .home-how-it-works-card .card:nth-child(2) {
@@ -159,7 +161,8 @@ p {
   align-items: center;
   justify-content: center;
   max-width: 200px;
-  background-color: white;
+  background-color: #1a162280;
+  border: rgba(41, 40, 70, 0.925) 1px solid;
   height: 200px;
   border-radius: unset;
 }
@@ -184,9 +187,9 @@ p {
 .features-page-cards .card {
   max-width: 250px;
   padding: 1.2rem;
-  background-color: white;
-  box-shadow: 0 0 10px rgba(154, 92, 247, 0.28), 0 0 40px rgba(217, 79, 248, 0.25),
-    0 0 60px rgba(241, 106, 138, 0.2);
+  background-color: #1a162280;
+  box-shadow: 0 0 10px rgba(154, 92, 247, 0.11), 0 0 40px rgba(217, 79, 248, 0.103),
+    0 0 60px rgba(241, 106, 138, 0.089);
 }
 
 .features-page-loveTavoloFeatures .card {
@@ -205,25 +208,15 @@ p {
   top: -1rem;
 }
 
-/*  ABOUT PAGE STYLES      */
-.about-page-ourValues .card:nth-child(1) {
-  background: #faf5ff;
-}
-
-.about-page-ourValues .card:nth-child(2) {
-  background: #f0f9ff;
-}
-
-.about-page-ourValues .card:nth-child(3) {
-  background: #fffaf0;
-}
-
-.about-page-ourValues .card:nth-child(4) {
-  background: #f3faf3;
+.about-page-ourValues .card {
+  background-color: rgba(26, 22, 34, 0.623);
+  backdrop-filter: blur(4px);
+  border: rgba(41, 40, 70, 0.527) 1px solid;
 }
 
 .about-page-outTeam .card {
-  background-color: white;
+  background-color: #1a162280;
+  border: rgba(41, 40, 70, 0.925) 1px solid;
   max-width: 180px;
   border-radius: unset;
   display: flex;

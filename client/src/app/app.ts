@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Navbar } from './components/navbar/navbar';
 import { ReusableToast } from './components/reusable-toast/reusable-toast';
 
 @Component({
@@ -10,6 +9,4 @@ import { ReusableToast } from './components/reusable-toast/reusable-toast';
   styleUrl: './app.css',
   standalone: true,
 })
-export class App {
-  
-}
+export class App {}

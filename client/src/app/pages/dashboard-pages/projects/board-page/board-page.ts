@@ -46,9 +46,11 @@ export class BoardPage {
 
   projectId = this.route.snapshot.params['project_id'];
   boardId = this.route.snapshot.params['board_id'];
+  ownerName = history.state.ownerName;
 
   projectName = history.state.projectName;
   boardName = history.state.boardName;
+  boardRoleName = history.state.role_name;
 
   lists = signal<any[]>([]);
   allBoardMembers = signal<any[]>([]);
@@ -77,6 +79,8 @@ export class BoardPage {
   );
 
   @ViewChild(ReactiveForm) addMemberForm!: ReactiveForm;
+  @ViewChild(BoardListsComponent) boardListsComp!: BoardListsComponent;
+  private savedScrollLeft = 0;
 
   ngOnInit() {
     this.loadBoardLists();
@@ -85,6 +89,7 @@ export class BoardPage {
 
   async loadBoardLists() {
     const data: any = await this.boardListService.getBoardList(this.boardId);
+    console.log(data);
 
     this.lists.set([...data.lists]);
     this.allBoardMembers.set([...data.members]);
@@ -121,7 +126,7 @@ export class BoardPage {
 
   async addNewList(event: any) {
     const name = event.list_name;
-    await this.boardListService.addNewBoardList(this.boardId, name);
+    await this.boardListService.addNewBoardList(this.boardId, name, this.boardRoleName);
     this.showaddListModel.set(false);
     this.loadBoardLists();
   }
@@ -133,7 +138,13 @@ export class BoardPage {
       const addedBy = this.auth.user().id;
       const role = this.auth.roles().find((r) => r.name === roleName);
       if (!role) return;
-      this.boardMembership.addBoardMembership(this.boardId, role.id, email, addedBy);
+      this.boardMembership.addBoardMembership(
+        this.boardId,
+        role.id,
+        email,
+        addedBy,
+        this.boardRoleName
+      );
       this.showAddMemberModel.set(false);
       this.addMemberForm.form.reset();
     } catch (error) {
@@ -144,7 +155,7 @@ export class BoardPage {
   async deleteMemberShip(event: any) {
     const boardId = event.entityId;
     const userId = event.memberId;
-    await this.boardMembership.deleteBoardMembership(boardId, userId);
+    await this.boardMembership.deleteBoardMembership(boardId, userId, this.boardRoleName);
     this.loadBoardLists();
   }
 
@@ -154,7 +165,7 @@ export class BoardPage {
     const roleName = event.newRole;
     const role = this.auth.roles().find((r) => r.name === roleName);
     if (!role) return;
-    await this.boardMembership.updateBoardMembership(boardId, userId, role.id);
+    await this.boardMembership.updateBoardMembership(boardId, userId, role.id, this.boardRoleName);
     this.loadBoardLists();
   }
 
@@ -173,7 +184,7 @@ export class BoardPage {
       this.showDeleteCardModal.set(false);
       return;
     }
-    await this.tasksService.deleteTask(this.selectedCardToDelete());
+    await this.tasksService.deleteTask(this.selectedCardToDelete(), this.boardRoleName);
     this.showDeleteCardModal.set(false);
     this.loadBoardLists();
   }
@@ -183,7 +194,7 @@ export class BoardPage {
     if (!confirm) return;
     const listId = this.selectedListId();
     if (!listId) return;
-    await this.boardListService.deleteBoardList(listId);
+    await this.boardListService.deleteBoardList(listId, this.boardRoleName);
     this.selectedListId.set(null);
     this.loadBoardLists();
   }

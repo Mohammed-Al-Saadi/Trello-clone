@@ -272,13 +272,13 @@ def srp_login_verify():
     get_user_id = get_user_email(email)
 
     access_token = create_jwt_token(
-        {"email": email, "id": get_user_id["id"], "app_role_id" : get_user_id["app_role_id"], "type": "access"},
+        {"email": email, "id": get_user_id["id"], "app_role_id" : get_user_id["app_role_id"], "full_name": get_user_id["full_name"], "type": "access"},
         expires_in_seconds=20
  
     )
 
     refresh_token = create_jwt_token(
-        {"email": email, "id": get_user_id["id"], "type": "refresh"},
+        {"email": email, "id": get_user_id["id"],"full_name": get_user_id["full_name"],  "type": "refresh"},
         expires_in_seconds=3 * 60 * 60
     )
 

@@ -1,16 +1,18 @@
 from flask import Blueprint, request, jsonify
 from database.boards import add_new_board , get_boards_for_project,delete_board,update_board
 from database.board_list import add_board_list
+from middleware.auth_middleware import token_required
+from middleware.role_middleware import require_roles
 
 add_boards_bp = Blueprint("add_boards_bp", __name__)
-
 @add_boards_bp.post("/add-board")
+@token_required
+@require_roles(["project_owner","project_admin"])
 def create_board():
     data = request.get_json()
 
     if not data:
         return jsonify({"error": "JSON body required"}), 400
-
     project_id = data.get("project_id")
     name = data.get("name")
     position = data.get("position", 0)
@@ -18,20 +20,14 @@ def create_board():
 
     if not project_id:
         return jsonify({"error": "project_id is required"}), 400
-
     if not name:
         return jsonify({"error": "Board name is required"}), 400
-
     if not category:
         return jsonify({"error": "category name is required"}), 400
-
     result, status = add_new_board(project_id, name, position, category)
-
     if status != 201:
         return jsonify(result), status
-
     board_id = result["board"]["id"]   
-
     default_lists = [
         {"name": "To Do", "position": 0},
         {"name": "In Progress", "position": 1},
@@ -46,10 +42,9 @@ def create_board():
         "board": result["board"]
     }), 201
 
-
 get_boards_bp = Blueprint("get_boards_bp", __name__)
-
 @get_boards_bp.route("/get-boards", methods=["POST"])
+@token_required
 def get_boards():
     data = request.get_json()
 
@@ -58,21 +53,15 @@ def get_boards():
 
     project_id = data.get("project_id")
     user_id = data.get("user_id")
-
-
     if not project_id and not user_id:
         return jsonify({"error": "project_id is required"}), 400
-
     result, status = get_boards_for_project(project_id, user_id)
     return jsonify(result), status
 
-
-
-
-
 delete_board_bp = Blueprint('delete_board_bp', __name__)
-
 @delete_board_bp.route('/delete-board', methods=['POST'])
+@token_required
+@require_roles(["project_owner"])
 def delete_board_post_json():
     data = request.get_json()
 
@@ -81,17 +70,13 @@ def delete_board_post_json():
 
     project_id = data['project_id']
     board_id = data['board_id']
-
     result, status = delete_board(project_id, board_id)
     return result, status
 
-
-
-
-
 edit_boards_bp = Blueprint('edit_boards_bp', __name__)
-
 @edit_boards_bp.route('/edit-board', methods=['PUT'])
+@token_required
+@require_roles(["project_owner","project_admin"])
 def edit_board_route():
     data = request.get_json()
 

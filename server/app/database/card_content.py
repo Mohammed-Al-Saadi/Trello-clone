@@ -3,31 +3,43 @@ from psycopg2.extras import RealDictCursor
 import psycopg2
 
 
-def add_card_content(card_id: int, content_html: str = None, due_date: str = None):
+def add_card_content(card_id: int, content_html: str = None, due_date: str = None, status: bool = None):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
-        # INSERT part must always supply all required columns
+        updated_fields = []
+        if content_html is not None:
+            updated_fields.append("content")
+        if due_date is not None:
+            updated_fields.append("due date")
+        if status is not None:
+            updated_fields.append("status")
+
         insert_query = """
-            INSERT INTO card_contents (card_id, content_html, due_date)
-            VALUES (%s, %s, %s)
+            INSERT INTO card_contents (card_id, content_html, due_date, status)
+            VALUES (%s, %s, %s, %s)
             ON CONFLICT (card_id)
             DO UPDATE SET 
                 content_html = COALESCE(EXCLUDED.content_html, card_contents.content_html),
                 due_date = EXCLUDED.due_date,
+                status = COALESCE(EXCLUDED.status, card_contents.status),
                 updated_at = CURRENT_TIMESTAMP
-            RETURNING card_id, content_html, due_date, updated_at;
+            RETURNING card_id, content_html, due_date, status, updated_at;
         """
-
-        # Always provide all 3 values (Postgres requires this)
-        cur.execute(insert_query, (card_id, content_html, due_date))
-
+        cur.execute(insert_query, (card_id, content_html, due_date, status))
         new_content = cur.fetchone()
         conn.commit()
 
+        if not updated_fields:
+            message = "No changes were made"
+        elif len(updated_fields) == 1:
+            message = f"{updated_fields[0].capitalize()} updated successfully"
+        else:
+            field_text = ", ".join(updated_fields[:-1]) + f" and {updated_fields[-1]}"
+            message = f"{field_text.capitalize()} updated successfully"
+
         return {
-            "message": "Card content updated successfully",
+            "message": message,
             "content": new_content
         }, 201
 
@@ -40,23 +52,39 @@ def add_card_content(card_id: int, content_html: str = None, due_date: str = Non
         conn.close()
 
 
+
 def get_card_content(card_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
     try:
         cur.execute("""
-            SELECT card_id, content_html, updated_at, due_date
+            SELECT card_id, content_html, updated_at, due_date, status
             FROM card_contents
             WHERE card_id = %s
         """, (card_id,))
         content = cur.fetchone()
 
-        # ✅ Return 200 even if there's no content
-        if not content:
-            return {"message": "No content yet", "content": None}, 200
+        cur.execute("""
+            SELECT 
+                c.id,
+                c.card_id,
+                c.user_id,
+                u.full_name AS user_name,
+                c.comment,
+                c.created_at
+            FROM card_comments c
+            JOIN users u ON u.id = c.user_id
+            WHERE c.card_id = %s
+            ORDER BY c.created_at ASC
+        """, (card_id,))
+        comments = cur.fetchall()
 
-        return {"content": content}, 200
+        return {
+            "content": content if content else None,
+            "comments": comments,
+            "message": "Success"
+        }, 200
 
     except psycopg2.Error as e:
         return {"error": f"Database error: {e.pgerror or str(e)}"}, 400
@@ -70,7 +98,6 @@ def get_card_content(card_id: int):
 def add_comment(card_id: int, user_id: int, comment: str):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             INSERT INTO card_comments (card_id, user_id, comment)
@@ -100,7 +127,6 @@ def add_comment(card_id: int, user_id: int, comment: str):
 def delete_comment(comment_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             DELETE FROM card_comments
@@ -131,7 +157,6 @@ def delete_comment(comment_id: int):
 def get_comments(card_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             SELECT id, card_id, user_id, comment, created_at

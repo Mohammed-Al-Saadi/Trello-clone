@@ -12,7 +12,7 @@ from routes.project_membership import add_project_membership_bp,delete_project_m
 from routes.board_membership import add_board_membership_bp, update_board_membership_bp, delete_board_membership_bp
 from routes.get_roles import get_roles_bp
 from routes.cards import add_card_to_list_bp, update_card_details_bp,  delete_card_routes, move_cards_in_same_list_bp, move_card_to_other_list_bp
-from routes.card_content import add_card_content_bp, get_card_content_routes
+from routes.card_content import add_card_content_bp, get_card_content_routes, add_comments_bp, delete_comments_bp
 
 from routes.card_membership import add_card_membership_bp,delete_card_membership_bp
 from routes.board_list import  add_lists_bp,delete_board_lists_bp, get_board_lists_bp, update_board_lists_position_bp,update_list_name_bp
@@ -64,6 +64,9 @@ app.register_blueprint(get_card_content_routes)
 app.register_blueprint(add_card_membership_bp)
 app.register_blueprint(delete_card_membership_bp)
 app.register_blueprint(update_card_details_bp)
+
+app.register_blueprint(add_comments_bp)
+app.register_blueprint(delete_comments_bp)
 
 
 

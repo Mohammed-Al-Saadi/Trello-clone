@@ -2,12 +2,9 @@ from database.config import get_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
-
-
 def add_new_board(project_id: int, name: str, position: int = 0, category: str = "General"):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             INSERT INTO boards (project_id, name, position, category)
@@ -31,16 +28,11 @@ def add_new_board(project_id: int, name: str, position: int = 0, category: str =
         cur.close()
         conn.close()
 
-
-
 def get_boards_for_project(project_id: int, user_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
     try:
-        # --------------------------------------------------------
-        # 1️⃣ Get required roles (project_owner id)
-        # --------------------------------------------------------
         cur.execute("SELECT id FROM roles WHERE name = 'project_owner'")
         owner_role = cur.fetchone()
         if not owner_role:
@@ -48,10 +40,6 @@ def get_boards_for_project(project_id: int, user_id: int):
 
         PROJECT_OWNER_ROLE_ID = owner_role["id"]
         PROJECT_OWNER_ROLE_NAME = "project_owner"
-
-        # --------------------------------------------------------
-        # 2️⃣ Get project owner + membership for current user
-        # --------------------------------------------------------
         cur.execute("""
             SELECT 
                 p.owner_id,
@@ -71,8 +59,6 @@ def get_boards_for_project(project_id: int, user_id: int):
             return {"error": "Project not found"}, 404
 
         is_owner = project["owner_id"] == user_id
-
-        # Determine user's project role
         if is_owner:
             project_role_id = PROJECT_OWNER_ROLE_ID
             project_role_name = PROJECT_OWNER_ROLE_NAME
@@ -84,12 +70,7 @@ def get_boards_for_project(project_id: int, user_id: int):
         else:
             project_role_id = None
             project_role_name = None
-
-        # --------------------------------------------------------
-        # 3️⃣ Fetch boards — if user is project_owner/project_admin/member: full access
-        # --------------------------------------------------------
         if is_owner or (project_role_name and project_role_name.startswith("project_")):
-
             cur.execute("""
                 SELECT 
                     b.*,
@@ -130,9 +111,6 @@ def get_boards_for_project(project_id: int, user_id: int):
                 ORDER BY b.position ASC
             """, (user_id, project_id))
 
-        # --------------------------------------------------------
-        # 4️⃣ If user is ONLY a board member → fetch only their boards
-        # --------------------------------------------------------
         else:
             cur.execute("""
                 SELECT 
@@ -177,9 +155,6 @@ def get_boards_for_project(project_id: int, user_id: int):
         boards = cur.fetchall()
         conn.commit()
 
-        # --------------------------------------------------------
-        # 5️⃣ Fetch ALL members for each board (board_roles + project_owner/admin/member)
-        # --------------------------------------------------------
         for board in boards:
 
             cur.execute("""
@@ -222,24 +197,21 @@ def get_boards_for_project(project_id: int, user_id: int):
             board_members = cur.fetchall()
             board["members"] = [dict(m) for m in board_members]
 
-        # --------------------------------------------------------
-        # 6️⃣ Final role resolution for current user
-        # --------------------------------------------------------
         results = []
         for board in boards:
             b = dict(board)
 
             if is_owner:
                 b["user_role_id"] = PROJECT_OWNER_ROLE_ID
-                b["user_role_name"] = PROJECT_OWNER_ROLE_NAME
+                b["role_name"] = PROJECT_OWNER_ROLE_NAME
 
             elif project_role_name and project_role_name.startswith("project_"):
                 b["user_role_id"] = project_role_id
-                b["user_role_name"] = project_role_name
+                b["role_name"] = project_role_name
 
             else:
                 b["user_role_id"] = b["board_role_id"]
-                b["user_role_name"] = b["board_role_name"]
+                b["role_name"] = b["board_role_name"]
 
             del b["board_role_id"]
             del b["board_role_name"]
@@ -289,7 +261,6 @@ def update_board(board_id: int, name: str, category: str):
     finally:
         cur.close()
         conn.close()
-
 
 
 def delete_board(project_id: int, board_id: int):

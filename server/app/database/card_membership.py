@@ -5,14 +5,12 @@ import psycopg2
 def add_card_membership_db(card_id: int, user_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             INSERT INTO card_assignees (card_id, user_id)
             VALUES (%s, %s)
             RETURNING card_id, user_id;
         """, (card_id, user_id))
-
         row = cur.fetchone()
         conn.commit()
 
@@ -36,7 +34,6 @@ def add_card_membership_db(card_id: int, user_id: int):
 def delete_card_membership_db(card_id: int, user_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             DELETE FROM card_assignees
@@ -45,8 +42,6 @@ def delete_card_membership_db(card_id: int, user_id: int):
         """, (card_id, user_id))
 
         row = cur.fetchone()
-
-        # If no rows were deleted → membership didn't exist
         if not row:
             conn.rollback()
             return {"error": "User is not assigned to this card"}, 404

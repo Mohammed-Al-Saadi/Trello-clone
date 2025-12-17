@@ -2,11 +2,9 @@ from database.config import get_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
-
 def add_board_list(board_id: int, name: str, position: int = None):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         if position is None:
             cur.execute("""
@@ -42,9 +40,7 @@ def add_board_list(board_id: int, name: str, position: int = None):
 def get_lists_by_board_id(board_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
-        # Fetch lists
         cur.execute("""
             SELECT id, name, position
             FROM lists
@@ -52,8 +48,6 @@ def get_lists_by_board_id(board_id: int):
             ORDER BY position ASC
         """, (board_id,))
         lists = cur.fetchall()
-
-        # Fetch all cards for these lists
         cur.execute("""
             SELECT 
                 id, 
@@ -70,15 +64,11 @@ def get_lists_by_board_id(board_id: int):
             ORDER BY position ASC, created_at ASC
         """, (board_id,))
         cards = cur.fetchall()
-
-        # Convert cards into dict grouped by list_id
         cards_by_list = {}
         for card in cards:
             list_id = card["list_id"]
             if list_id not in cards_by_list:
                 cards_by_list[list_id] = []
-
-            # ⭐ NEW: fetch card members (assignees)
             cur.execute("""
                 SELECT 
                     u.id AS user_id,
@@ -89,17 +79,25 @@ def get_lists_by_board_id(board_id: int):
                 WHERE ca.card_id = %s
             """, (card["id"],))
             card_members = cur.fetchall()
-
             card["members"] = card_members  
+
+            cur.execute("""
+                SELECT due_date, status
+                FROM card_contents
+                WHERE card_id = %s
+                LIMIT 1
+            """, (card["id"],))
+            due_date_row = cur.fetchone()
+
+            card["due_date"] = due_date_row["due_date"] if due_date_row else None
+            card["status"] = due_date_row["status"] if due_date_row else None
 
             cards_by_list[list_id].append(card)
 
-        # Attach cards to each list
+
         for list_obj in lists:
             list_id = list_obj["id"]
             list_obj["cards"] = cards_by_list.get(list_id, [])
-
-        # Fetch board members
         cur.execute("""
             (
                 -- Project owner
@@ -161,13 +159,10 @@ def get_lists_by_board_id(board_id: int):
 
 
 def update_list_positions(lists: list):
-
     if not isinstance(lists, list) or len(lists) == 0:
         return {"error": "Invalid payload format"}, 400
-
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         update_values = [(item["id"], item["position"]) for item in lists]
         query = """
@@ -177,7 +172,6 @@ def update_list_positions(lists: list):
             WHERE l.id = v.id
         """
         psycopg2.extras.execute_values(cur, query, update_values)
-
         conn.commit()
         return {
             "message": "List positions updated successfully",
@@ -196,7 +190,6 @@ def update_list_positions(lists: list):
 def update_list_name(list_id: int, new_name: str):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             UPDATE lists
@@ -228,7 +221,6 @@ def update_list_name(list_id: int, new_name: str):
 def delete_list(list_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             DELETE FROM lists

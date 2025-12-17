@@ -5,9 +5,7 @@ import psycopg2
 def add_project_membership_db(project_id: int, role_id: int, email: str, added_by: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
-        # 1. Check if user exists
         cur.execute("SELECT id FROM users WHERE email = %s", (email,))
         user = cur.fetchone()
 
@@ -15,8 +13,6 @@ def add_project_membership_db(project_id: int, role_id: int, email: str, added_b
             return {"error": "User does not exist or is not registered"}, 404
 
         user_id = user["id"]
-
-        # 2. Insert membership
         cur.execute("""
             INSERT INTO project_memberships (project_id, user_id, role_id, added_by)
             VALUES (%s, %s, %s, %s)
@@ -25,8 +21,6 @@ def add_project_membership_db(project_id: int, role_id: int, email: str, added_b
 
         row = cur.fetchone()
         conn.commit()
-
-        # 🔥 FINAL FIX: return success message for toast
         return {
             "message": "New owner added successfully!",
             "data": row
@@ -34,7 +28,7 @@ def add_project_membership_db(project_id: int, role_id: int, email: str, added_b
 
     except psycopg2.errors.UniqueViolation:
         conn.rollback()
-        return {"error": "User already added to this board in this project"}, 409
+        return {"error": "User already added to this project"}, 409
 
     except psycopg2.Error as e:
         conn.rollback()
@@ -49,7 +43,6 @@ def add_project_membership_db(project_id: int, role_id: int, email: str, added_b
 def delete_project_membership_db(project_id: int, user_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             DELETE FROM project_memberships
@@ -73,14 +66,11 @@ def delete_project_membership_db(project_id: int, user_id: int):
         cur.close()
         conn.close()
 
-
-
 def update_project_membership_role_db(project_id: int, user_id: int, new_role_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
 
     try:
-        # Check membership exists
         cur.execute("""
             SELECT * FROM project_memberships
             WHERE project_id = %s AND user_id = %s
@@ -91,7 +81,6 @@ def update_project_membership_role_db(project_id: int, user_id: int, new_role_id
         if not member:
             return {"error": "Membership not found for this user and project"}, 404
 
-        # Update role_id
         cur.execute("""
             UPDATE project_memberships
             SET role_id = %s

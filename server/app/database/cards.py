@@ -2,11 +2,9 @@ from database.config import get_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
-
 def add_card_to_list(list_id: int, title: str, created_by: int, priority: str):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             SELECT COALESCE(MAX(position), -1) + 1 AS next_position
@@ -37,8 +35,6 @@ def add_card_to_list(list_id: int, title: str, created_by: int, priority: str):
         cur.close()
         conn.close()
 
-
-
 def delete_card(card_id: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
@@ -56,16 +52,9 @@ def delete_card(card_id: int):
         cur.close()
         conn.close()
 
-from database.config import get_db_connection
-from psycopg2.extras import RealDictCursor
-import psycopg2
-
-
 def update_card_positions_by_list(list_id: int, cards: list):
-
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         conn.autocommit = False
         for index, card in enumerate(cards):
@@ -98,9 +87,7 @@ def update_card_positions_by_list(list_id: int, cards: list):
 def update_single_card_list(card_id: int, new_list_id: int, new_position: int):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
-        # 1️⃣ Shift cards in target list down by +1 starting from new_position
         cur.execute("""
             UPDATE cards
             SET position = position + 1
@@ -133,22 +120,22 @@ def update_single_card_list(card_id: int, new_list_id: int, new_position: int):
         conn.close()
 
 
-
-
 def update_card_details(card_id: int, new_title: str = None, new_priority: str = None):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     update_fields = []
     update_values = []
+    updated = [] 
 
     if new_title is not None:
         update_fields.append("title = %s")
         update_values.append(new_title)
+        updated.append("title")
 
     if new_priority is not None:
         update_fields.append("priority = %s")
         update_values.append(new_priority)
+        updated.append("priority")
 
     if not update_fields:
         return {"error": "No fields provided to update."}, 400
@@ -170,9 +157,15 @@ def update_card_details(card_id: int, new_title: str = None, new_priority: str =
             return {"error": "Card not found"}, 404
 
         conn.commit()
+        if updated == ["title"]:
+            msg = "Title updated successfully"
+        elif updated == ["priority"]:
+            msg = "Priority updated successfully"
+        else:
+            msg = "Title and priority updated successfully"
 
         return {
-            "message": "Card updated successfully",
+            "message": msg,
             "card": updated_card
         }, 200
 

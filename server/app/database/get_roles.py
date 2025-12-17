@@ -3,11 +3,9 @@ from database.config import get_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
-
 def get_all_roles_db():
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-
     try:
         cur.execute("""
             SELECT id, name, permissions, is_app_role 

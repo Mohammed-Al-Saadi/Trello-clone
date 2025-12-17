@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
 def get_db_connection():
     """Create and return a PostgreSQL connection."""
     try:

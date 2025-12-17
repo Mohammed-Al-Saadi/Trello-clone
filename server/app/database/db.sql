@@ -75,6 +75,7 @@ CREATE TABLE card_contents (
   card_id INTEGER PRIMARY KEY REFERENCES cards(id) ON DELETE CASCADE,
   due_date TIMESTAMPTZ NULL,
   content_html TEXT  NULL,
+  status VARCHAR(50) NULL,
   updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 

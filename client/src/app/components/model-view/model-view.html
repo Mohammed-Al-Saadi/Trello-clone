@@ -1,9 +1,0 @@
-<div class="backdrop" (click)="closeModel.emit()">
-    <div class="model-view" (click)="$event.stopPropagation()">
-        <div class="model-content">
-            <button class="close-btn" (click)="onClick()" aria-label="Close">✕</button>
-            <ng-content></ng-content>
-        </div>
-
-    </div>
-</div>

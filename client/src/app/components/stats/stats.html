@@ -1,9 +1,0 @@
-<div class="stats-component" [ngClass]="statsClass()">
-    <ng-container class="home-stats-container" *ngFor="let item of stats(); let last = last">
-        <div class="stat-item">
-            <div class="stat-value">{{ item.value }}</div>
-            <div class="stat-label">{{ item.label }}</div>
-        </div>
-        <div class="divider" *ngIf="!last"></div>
-    </ng-container>
-</div>

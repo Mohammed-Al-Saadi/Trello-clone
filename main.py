@@ -22,7 +22,7 @@ from flask_cors import CORS
 CORS(
     app,
     supports_credentials=True,  
-    origins=["http://localhost:4200", "http://127.0.0.1:4200"]
+    origins=["http://localhost:4200", "http://127.0.0.1:4200","https://tavolopro.netlify.app"]
 )
 app.secret_key = os.getenv("SECRET_KEY")
                   

@@ -358,6 +358,8 @@ def logout():
         httponly=True,
         secure=True,
         samesite="none",
+        domain=".tavolopro.app",
+
         max_age=0
     )
 
@@ -367,6 +369,8 @@ def logout():
         httponly=True,
         secure=True,
         samesite="none",
+        domain=".tavolopro.app",
+
         max_age=0
     )
 

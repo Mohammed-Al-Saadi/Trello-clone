@@ -296,7 +296,7 @@ def srp_login_verify():
         httponly=True,
         secure=True,     
         samesite="None",    
-        max_age=20
+        max_age=15 * 60
     )
 
     response.set_cookie(

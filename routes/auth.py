@@ -295,7 +295,7 @@ def srp_login_verify():
         value=access_token,
         httponly=True,
         secure=True,     
-        samesite="none",    
+        samesite="None",    
         max_age=20
     )
 
@@ -304,9 +304,11 @@ def srp_login_verify():
         value=refresh_token,
         httponly=True,
         secure=True,
-        samesite="none",
+        samesite="None",
         max_age=3 * 60 * 60,
 )
+    response.headers.add("Access-Control-Allow-Origin", "https://tavolopro.netlify.app")
+    response.headers.add("Access-Control-Allow-Credentials", "true")
     return response
 
 check_auth_bp = Blueprint("check_auth_bp", __name__)

@@ -3,5 +3,4 @@ psycopg2-binary
 python-dotenv
 Flask-Cors
 PyJWT>=2.8.0
-
-gunicorn "myapp:create_app()"
+gunicorn

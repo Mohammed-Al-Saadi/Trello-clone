@@ -27,6 +27,9 @@ CORS(
 app.secret_key = os.getenv("SECRET_KEY")                  
 get_db_connection()                                        
 
+@app.route('/')
+def home():
+    return "Hello from Flask!"
        
 app.register_blueprint(srp_register_bp)
 app.register_blueprint(srp_start_bp)

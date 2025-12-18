@@ -287,8 +287,7 @@ def srp_login_verify():
 
     response = make_response(jsonify({
         "message": "Login successful",
-        "M2": M2_hex,
-        "token": access_token
+        "M2": M2_hex
     }))
 
     response.set_cookie(
@@ -296,7 +295,8 @@ def srp_login_verify():
         value=access_token,
         httponly=True,
         secure=True,     
-        samesite="None",    
+        samesite="Lax",
+        domain=".tavolopro.live",
         max_age=15 * 60
     )
 
@@ -305,7 +305,8 @@ def srp_login_verify():
         value=refresh_token,
         httponly=True,
         secure=True,
-        samesite="None",
+        samesite="Lax",
+        domain=".tavolopro.live",
         max_age=3 * 60 * 60,
 )
 
@@ -359,8 +360,6 @@ def logout():
         httponly=True,
         secure=True,
         samesite="none",
-        domain=".tavolopro.app",
-
         max_age=0
     )
 
@@ -370,8 +369,6 @@ def logout():
         httponly=True,
         secure=True,
         samesite="none",
-        domain=".tavolopro.app",
-
         max_age=0
     )
 

@@ -295,7 +295,9 @@ def srp_login_verify():
         value=access_token,
         httponly=True,
         secure=True,     
-        samesite="None",    
+        samesite="Lax",
+        domain=".tavolopro.live",
+
         max_age=15 * 60
     )
 
@@ -304,7 +306,9 @@ def srp_login_verify():
         value=refresh_token,
         httponly=True,
         secure=True,
-        samesite="None",
+        samesite="Lax",
+        domain=".tavolopro.live",
+
         max_age=3 * 60 * 60,
 )
 

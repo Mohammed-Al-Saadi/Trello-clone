@@ -24,8 +24,10 @@ CORS(
     supports_credentials=True,  
     origins=["http://localhost:4200", "http://127.0.0.1:4200"]
 )
-app.secret_key = os.getenv("SECRET_KEY")                  
+app.secret_key = os.getenv("SECRET_KEY")
+                  
 get_db_connection()                                        
+
 
 @app.route('/')
 def home():

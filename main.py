@@ -16,23 +16,24 @@ from routes.card_content import add_card_content_bp, get_card_content_routes, ad
 
 from routes.card_membership import add_card_membership_bp,delete_card_membership_bp
 from routes.board_list import  add_lists_bp,delete_board_lists_bp, get_board_lists_bp, update_board_lists_position_bp,update_list_name_bp
-load_dotenv()                                             
-app = Flask(__name__)                                     
-from flask_cors import CORS
+
+# Load environment variables
+load_dotenv()
+
+app = Flask(__name__)
+
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+
 CORS(
     app,
-    supports_credentials=True,  
-    origins=["http://localhost:4200", "http://127.0.0.1:8080", "http://127.0.0.1:4200","https://tavolopro.netlify.app", "https://www.tavolopro.live","https://tavolopro.live","https://api.tavolopro.live/"]
+    supports_credentials=True,
+    origins=allowed_origins
 )
 app.secret_key = os.getenv("SECRET_KEY")
-                  
-get_db_connection()                                        
-
-
 @app.route('/')
 def home():
     return "Hello from Flask!"
-       
+
 app.register_blueprint(srp_register_bp)
 app.register_blueprint(srp_start_bp)
 app.register_blueprint(srp_verify_bp)
@@ -61,20 +62,15 @@ app.register_blueprint(delete_board_lists_bp)
 app.register_blueprint(add_card_to_list_bp)
 app.register_blueprint(delete_card_routes)
 app.register_blueprint(move_cards_in_same_list_bp)
-
 app.register_blueprint(move_card_to_other_list_bp)
 app.register_blueprint(add_card_content_bp)
 app.register_blueprint(get_card_content_routes)
-
 app.register_blueprint(add_card_membership_bp)
 app.register_blueprint(delete_card_membership_bp)
 app.register_blueprint(update_card_details_bp)
-
 app.register_blueprint(add_comments_bp)
 app.register_blueprint(delete_comments_bp)
 
-
-
-if __name__ == '__main__':                                  
-    print("✅ Flask is starting...")                        
-    app.run(debug=True, port=8080)                         
+if __name__ == '__main__':
+    print("✅ Flask is starting...")
+    app.run(debug=True, port=8080)

@@ -191,6 +191,8 @@ def srp_login_start():
 #  BACKEND returns JSON: { message, M2: hex }                                 
 #  Client checks M2 locally to authenticate the server (mutual auth).         
 # 
+
+
 srp_verify_bp = Blueprint('srp_verify_bp', __name__)
 
 @srp_verify_bp.route("/srp-login/verify", methods=["POST"])
@@ -290,25 +292,48 @@ def srp_login_verify():
         "M2": M2_hex
     }))
 
-    response.set_cookie(
-        key="access_token",
-        value=access_token,
-        httponly=True,
-        secure=True,          
-        samesite="Lax",        
-        domain=".tavolopro.live", 
-        max_age=15 * 60
-    )
+    env = (os.getenv("APP_ENV") or "local").lower()
 
-    response.set_cookie(
-        key="refresh_token",
-        value=refresh_token,
-        httponly=True,
-        secure=True,
-        samesite="Lax",
-        domain=".tavolopro.live",
-        max_age=3 * 60 * 60
-    )
+    if env == "local":
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite="None",
+
+            max_age=15 * 60
+        )
+
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="None",
+
+            max_age=3 * 60 * 60
+        )
+    else:
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite="lax",
+            domain=".tavolopro.live",
+            max_age=15 * 60
+        )
+
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            secure=True,
+            samesite="None",
+            domain=".tavolopro.live",
+            max_age=3 * 60 * 60
+        )
 
 
     return response

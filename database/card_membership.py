@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -29,7 +29,7 @@ def add_card_membership_db(card_id: int, user_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def delete_card_membership_db(card_id: int, user_id: int):
     conn = get_db_connection()
@@ -59,4 +59,4 @@ def delete_card_membership_db(card_id: int, user_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -26,7 +26,9 @@ def add_new_project(name: str, description: str, owner_id: int, category:str):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
+
+
 def get_all_project_for_user(user_id: str):
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
@@ -156,7 +158,7 @@ def get_all_project_for_user(user_id: str):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 
@@ -185,7 +187,7 @@ def delete_project(project_id: int, owner_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def update_project(project_id: int, owner_id: int, name: str, description: str, category: str):
@@ -217,4 +219,4 @@ def update_project(project_id: int, owner_id: int, name: str, description: str, 
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

@@ -6,8 +6,10 @@ from database.board_membership import add_board_membership_db, delete_board_memb
 from middleware.auth_middleware import token_required
 from middleware.role_middleware import require_roles
 
-add_board_membership_bp = Blueprint("add_board_membership_bp", __name__)
-@add_board_membership_bp.route("/add-board-membership", methods=["POST"])
+bp = Blueprint("board_membership", __name__)  
+
+
+@bp.route("/add-board-membership", methods=["POST"])
 @token_required
 @require_roles(["project_owner","project_admin"])
 def add_membership():
@@ -23,10 +25,8 @@ def add_membership():
     result, status = add_board_membership_db(board_id, role_id, email, added_by)
     return jsonify(result), status
 
-update_board_membership_bp = Blueprint("update_board_membership_bp", __name__)
-@update_board_membership_bp.route("/update-board-membership", methods=["PUT"])
+@bp.route("/update-board-membership", methods=["PUT"])
 @token_required
-@require_roles(["project_owner","project_admin"])
 def update_board_member_role():
     data = request.get_json()
     required_fields = ["board_id", "user_id", "role_id"]
@@ -38,10 +38,8 @@ def update_board_member_role():
     result, status = update_board_member_role_db(board_id, user_id, role_id)
     return jsonify(result), status
 
-delete_board_membership_bp = Blueprint("delete_board_membership_bp", __name__)
-@delete_board_membership_bp.route("/delete-board-membership", methods=["POST"])
+@bp.route("/delete-board-membership", methods=["POST"])
 @token_required
-@require_roles(["project_owner","project_admin"])
 def delete_board_membership():
     data = request.get_json()
 

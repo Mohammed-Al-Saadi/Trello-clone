@@ -2,8 +2,11 @@ from flask import Blueprint, request
 from database.card_membership import add_card_membership_db, delete_card_membership_db
 from middleware.auth_middleware import token_required
 
-add_card_membership_bp = Blueprint("add_card_membership_bp", __name__)
-@add_card_membership_bp.post("/cards-assign-member")
+bp = Blueprint("card_membership", __name__)
+
+
+
+@bp.post("/cards-assign-member")
 @token_required
 def assign_members():
     data = request.get_json()
@@ -29,8 +32,7 @@ def assign_members():
         "results": results
     }, 207 
 
-delete_card_membership_bp = Blueprint("delete_card_membership_bp", __name__)
-@delete_card_membership_bp.delete("/cards-remove-member")
+@bp.delete("/cards-remove-member")
 @token_required
 def remove_member():
     data = request.get_json()

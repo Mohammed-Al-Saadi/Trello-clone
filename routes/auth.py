@@ -53,9 +53,9 @@ from database.get_roles import get_all_roles_db
 # { full_name, email, salt: hex, verifier: hex }                             
 # BACKEND stores BYTEA salt/verifier; never sees password.                   
 
-srp_register_bp = Blueprint('srp_register_bp', __name__)
+bp = Blueprint("auth", __name__)  
 
-@srp_register_bp.route('/srp-register', methods=['POST'])
+@bp.route('/srp-register', methods=['POST'])
 def srp_register():
     """
     Registration flow (SRP):
@@ -97,9 +97,8 @@ def srp_register():
 #  BACKEND returns: { salt: hex, B: hex, session_id }                         
 #  Frontend will use these to compute S, K, and M1.                           
 # 
-srp_start_bp = Blueprint('srp_start_bp', __name__)
 
-@srp_start_bp.route("/srp-login/start", methods=["POST"])
+@bp.route("/srp-login/start", methods=["POST"])
 def srp_login_start():
     """
     Step 1 (Client → Server):
@@ -193,9 +192,8 @@ def srp_login_start():
 # 
 
 
-srp_verify_bp = Blueprint('srp_verify_bp', __name__)
 
-@srp_verify_bp.route("/srp-login/verify", methods=["POST"])
+@bp.route("/srp-login/verify", methods=["POST"])
 def srp_login_verify():
     """
     Step 2 (Client → Server):
@@ -335,8 +333,7 @@ def srp_login_verify():
 
     return response
 
-check_auth_bp = Blueprint("check_auth_bp", __name__)
-@check_auth_bp.route("/protected", methods=["GET"])
+@bp.route("/protected", methods=["GET"])
 def check_auth():
     access_token = request.cookies.get("access_token")
     refresh_token = request.cookies.get("refresh_token")
@@ -367,9 +364,8 @@ def check_auth():
 
     return jsonify({"authenticated": False, "error": "Unauthorized"}), 401
 
-logout_bp = Blueprint("logout_bp", __name__)
 
-@logout_bp.route("/logout", methods=["POST"])
+@bp.route("/logout", methods=["POST"])
 def logout():
     """
     Logs out the user by clearing both access and refresh tokens.

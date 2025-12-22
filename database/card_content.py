@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -49,7 +49,7 @@ def add_card_content(card_id: int, content_html: str = None, due_date: str = Non
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 
@@ -91,7 +91,7 @@ def get_card_content(card_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 
@@ -121,7 +121,7 @@ def add_comment(card_id: int, user_id: int, comment: str):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def delete_comment(comment_id: int):
@@ -151,7 +151,7 @@ def delete_comment(comment_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def get_comments(card_id: int):
@@ -176,4 +176,4 @@ def get_comments(card_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

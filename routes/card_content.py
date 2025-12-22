@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify
 from database.card_content import add_card_content, add_comment, delete_comment, get_card_content, get_comments
 from middleware.auth_middleware import token_required
 
-add_card_content_bp = Blueprint("add_card_content_bp", __name__)
-@add_card_content_bp.route("/add-cards-content", methods=["POST", "PUT"])
+bp = Blueprint("card_content", __name__)
+
+
+@bp.route("/add-cards-content", methods=["POST", "PUT"])
 @token_required
 def save_card_content():
     try:
@@ -40,8 +42,7 @@ def save_card_content():
         return jsonify({"error": str(e)}), 500
 
 
-get_card_content_routes = Blueprint("get_card_content_routes", __name__)
-@get_card_content_routes.route("/get-card-content", methods=["POST"])
+@bp.route("/get-card-content", methods=["POST"])
 @token_required
 def get_card_content_route():
     try:
@@ -59,8 +60,7 @@ def get_card_content_route():
 
 
 
-add_comments_bp = Blueprint("add_comments_bp", __name__)
-@add_comments_bp.route("/add-card-comment", methods=["POST"])
+@bp.route("/add-card-comment", methods=["POST"])
 @token_required
 def add_comment_route():
     data = request.get_json() or {}
@@ -78,8 +78,7 @@ def add_comment_route():
     return jsonify(response), status
 
 
-delete_comments_bp = Blueprint("delete_comments_bp", __name__)
-@delete_comments_bp.route("/delete-comment", methods=["POST"])
+@bp.route("/delete-comment", methods=["POST"])
 @token_required
 def delete_comment_route():
     data = request.get_json() or {}
@@ -93,8 +92,7 @@ def delete_comment_route():
 
 
 
-get_comments_bp = Blueprint("get_comments_bp", __name__)
-@get_comments_bp.route("/get-comment", methods=["POST"])
+@bp.route("/get-comment", methods=["POST"])
 @token_required
 def get_comments_route():
     data = request.get_json() or {}

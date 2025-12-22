@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -54,7 +54,7 @@ def add_board_membership_db(board_id: int, role_id: int, email: str, added_by: i
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def delete_board_membership_db(project_id: int, user_id: int):
     conn = get_db_connection()
@@ -81,7 +81,7 @@ def delete_board_membership_db(project_id: int, user_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def update_board_member_role_db(board_id: int, user_id: int, new_role_id: int):
@@ -116,7 +116,7 @@ def update_board_member_role_db(board_id: int, user_id: int, new_role_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def delete_board_member_db(board_id: int, user_id: int):
@@ -144,4 +144,4 @@ def delete_board_member_db(board_id: int, user_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

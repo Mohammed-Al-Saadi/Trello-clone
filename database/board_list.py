@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -35,7 +35,7 @@ def add_board_list(board_id: int, name: str, position: int = None):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def get_lists_by_board_id(board_id: int):
     conn = get_db_connection()
@@ -155,7 +155,7 @@ def get_lists_by_board_id(board_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def update_list_positions(lists: list):
@@ -184,7 +184,7 @@ def update_list_positions(lists: list):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def update_list_name(list_id: int, new_name: str):
@@ -215,7 +215,7 @@ def update_list_name(list_id: int, new_name: str):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def delete_list(list_id: int):
@@ -242,4 +242,4 @@ def delete_list(list_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

@@ -6,8 +6,8 @@ from database.project_membership import add_project_membership_db, delete_projec
 from middleware.auth_middleware import token_required
 from middleware.role_middleware import require_roles
 
-add_project_membership_bp = Blueprint("add_project_membership_bp", __name__)
-@add_project_membership_bp.route("/add-project-membership", methods=["POST"])
+bp = Blueprint("project_membership", __name__) 
+@bp.route("/add-project-membership", methods=["POST"])
 @token_required
 @require_roles(["project_owner", "project_admin"])
 def add_membership():
@@ -23,8 +23,7 @@ def add_membership():
     result, status = add_project_membership_db(project_id, role_id, email, added_by)
     return jsonify(result), status
 
-delete_project_membership_bp = Blueprint("delete_project_membership_bp", __name__)
-@delete_project_membership_bp.route("/delete-project-membership", methods=["POST"])
+@bp.route("/delete-project-membership", methods=["POST"])
 @token_required
 @require_roles(["project_owner"])
 def delete_project_membership():
@@ -37,8 +36,7 @@ def delete_project_membership():
     result, status = delete_project_membership_db(project_id, user_id)
     return jsonify(result), status
 
-edit_project_membership_bp = Blueprint("edit_project_membership_bp", __name__)
-@edit_project_membership_bp.route("/edit-project-membership", methods=["POST"])
+@bp.route("/edit-project-membership", methods=["POST"])
 @token_required
 @require_roles(["project_owner"])
 def update_member_role():

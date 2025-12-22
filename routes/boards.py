@@ -4,8 +4,9 @@ from database.board_list import add_board_list
 from middleware.auth_middleware import token_required
 from middleware.role_middleware import require_roles
 
-add_boards_bp = Blueprint("add_boards_bp", __name__)
-@add_boards_bp.post("/add-board")
+bp = Blueprint("boards", __name__) 
+
+@bp.post("/add-board")
 @token_required
 @require_roles(["project_owner","project_admin"])
 def create_board():
@@ -42,8 +43,7 @@ def create_board():
         "board": result["board"]
     }), 201
 
-get_boards_bp = Blueprint("get_boards_bp", __name__)
-@get_boards_bp.route("/get-boards", methods=["POST"])
+@bp.route("/get-boards", methods=["POST"])
 @token_required
 def get_boards():
     data = request.get_json()
@@ -58,8 +58,7 @@ def get_boards():
     result, status = get_boards_for_project(project_id, user_id)
     return jsonify(result), status
 
-delete_board_bp = Blueprint('delete_board_bp', __name__)
-@delete_board_bp.route('/delete-board', methods=['POST'])
+@bp.route('/delete-board', methods=['POST'])
 @token_required
 @require_roles(["project_owner"])
 def delete_board_post_json():
@@ -73,8 +72,7 @@ def delete_board_post_json():
     result, status = delete_board(project_id, board_id)
     return result, status
 
-edit_boards_bp = Blueprint('edit_boards_bp', __name__)
-@edit_boards_bp.route('/edit-board', methods=['PUT'])
+@bp.route('/edit-board', methods=['PUT'])
 @token_required
 @require_roles(["project_owner","project_admin"])
 def edit_board_route():

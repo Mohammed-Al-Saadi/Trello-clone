@@ -3,8 +3,8 @@ from database.cards import add_card_to_list, delete_card, update_card_details, u
 from middleware.auth_middleware import token_required
 from middleware.role_middleware import require_roles
 
-add_card_to_list_bp = Blueprint("add_card_to_list_bp", __name__)
-@add_card_to_list_bp.route("/add-cards", methods=["POST"])
+bp = Blueprint("cards", __name__) 
+@bp.route("/add-cards", methods=["POST"])
 @token_required
 def create_card():
     data = request.get_json()
@@ -19,8 +19,7 @@ def create_card():
     response, status_code = add_card_to_list(list_id, title, created_by, priority)
     return jsonify(response), status_code
 
-delete_card_routes = Blueprint("delete_card_routes", __name__)
-@delete_card_routes.route("/delete-cards", methods=["POST"])
+@bp.route("/delete-cards", methods=["POST"])
 @token_required
 @require_roles(["project_owner","project_admin","project_member","board_admin"])
 def delete_card_json_route():
@@ -31,8 +30,7 @@ def delete_card_json_route():
     response, status = delete_card(card_id)
     return jsonify(response), status
 
-move_cards_in_same_list_bp = Blueprint('move_cards_in_same_list_bp', __name__)
-@move_cards_in_same_list_bp.route('/update-cards-list', methods=['POST'])
+@bp.route('/update-cards-list', methods=['POST'])
 @token_required
 def reorder_cards():
     data = request.get_json()
@@ -48,8 +46,7 @@ def reorder_cards():
         return jsonify({"error": "'cards' must be a list"}), 400
     return update_card_positions_by_list(list_id, cards)
 
-move_card_to_other_list_bp = Blueprint('move_card_to_other_list_bp', __name__)
-@move_card_to_other_list_bp.route('/move-card-to-new-list', methods=['POST'])
+@bp.route('/move-card-to-new-list', methods=['POST'])
 @token_required
 def move_card():
     data = request.get_json()
@@ -72,8 +69,7 @@ def move_card():
     return update_single_card_list(card_id, new_list_id, new_position)
 
 
-update_card_details_bp = Blueprint("update_card_details_bp", __name__)
-@update_card_details_bp.route("/update-card-details", methods=["POST"])
+@bp.route("/update-card-details", methods=["POST"])
 @token_required
 def update_card_route():
     data = request.get_json(silent=True)

@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2 import Binary
 from psycopg2.extras import RealDictCursor
 from typing import Optional, Dict, Any
@@ -33,7 +33,7 @@ def register_srp_user(full_name: str, email: str, salt_bytes: bytes, verifier_by
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def get_user_salt_verifier(email: str) -> Optional[Dict[str, Any]]:
     conn = get_db_connection()
@@ -44,7 +44,7 @@ def get_user_salt_verifier(email: str) -> Optional[Dict[str, Any]]:
         return row
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def get_user_email(email: str):
     conn = get_db_connection()
@@ -70,7 +70,7 @@ def get_user_email(email: str):
         return {"error": str(e)}, 400
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 

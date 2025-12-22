@@ -1,4 +1,4 @@
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -33,7 +33,7 @@ def add_card_to_list(list_id: int, title: str, created_by: int, priority: str):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def delete_card(card_id: int):
     conn = get_db_connection()
@@ -50,7 +50,7 @@ def delete_card(card_id: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def update_card_positions_by_list(list_id: int, cards: list):
     conn = get_db_connection()
@@ -82,7 +82,7 @@ def update_card_positions_by_list(list_id: int, cards: list):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 def update_single_card_list(card_id: int, new_list_id: int, new_position: int):
     conn = get_db_connection()
@@ -117,7 +117,7 @@ def update_single_card_list(card_id: int, new_list_id: int, new_position: int):
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)
 
 
 def update_card_details(card_id: int, new_title: str = None, new_priority: str = None):
@@ -175,4 +175,4 @@ def update_card_details(card_id: int, new_title: str = None, new_priority: str =
 
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

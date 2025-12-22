@@ -4,8 +4,8 @@ from middleware.auth_middleware import token_required
 from time import sleep
 from middleware.role_middleware import require_roles
 
-add_projects_bp = Blueprint('add_projects_bp', __name__)
-@add_projects_bp.route('/add-project', methods=['POST'])
+bp = Blueprint("projects", __name__) 
+@bp.route('/add-project', methods=['POST'])
 @token_required
 def create_project():
     try:
@@ -30,8 +30,7 @@ def create_project():
         }), 500
 
 
-get_projects_bp = Blueprint('get_projects_bp', __name__)
-@get_projects_bp.route('/get-projects', methods=['POST'])
+@bp.route('/get-projects', methods=['POST'])
 @token_required
 def get_projects():
     """Return all projects for the given user_id (sent from frontend)."""
@@ -48,8 +47,7 @@ def get_projects():
 
     return jsonify(projects), status
 
-update_projects_bp = Blueprint('update_projects_bp', __name__)
-@update_projects_bp.route('/update-project', methods=['PUT'])
+@bp.route('/update-project', methods=['PUT'])
 @require_roles(["project_owner"])
 @token_required
 def edit_project():
@@ -74,8 +72,7 @@ def edit_project():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-delete_projects_bp = Blueprint('delete_projects_bp', __name__)
-@delete_projects_bp.route('/delete-project', methods=['POST'])
+@bp.route('/delete-project', methods=['POST'])
 @token_required
 @require_roles(["project_owner"])
 def remove_project():

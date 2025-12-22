@@ -1,5 +1,5 @@
 
-from database.config import get_db_connection
+from database.config import get_db_connection, release_db_connection
 from psycopg2.extras import RealDictCursor
 import psycopg2
 
@@ -22,4 +22,4 @@ def get_all_roles_db():
     
     finally:
         cur.close()
-        conn.close()
+        release_db_connection(conn)

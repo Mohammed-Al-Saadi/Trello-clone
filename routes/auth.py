@@ -284,9 +284,6 @@ def srp_login_verify():
         expires_in_seconds=3 * 60 * 60
     )
 
-
-    from flask import jsonify, make_response
-
     response = make_response(jsonify({
         "message": "Login successful",
         "M2": M2_hex
